@@ -3,10 +3,19 @@ session_start();
 error_reporting(E_ALL);
 include('config.php');
 
-
+$discount = 0;
 
 if (isset($_SESSION['user_id'])) {
     $user = $_SESSION['user_id'];
+    if (isset($_GET['submit'])) {
+        $discount = secure($_GET['discount']);
+        $sql = "SELECT * FROM discount_03 WHERE code = (:discount)";
+        $query = $db->prepare($sql);
+        $query->bindParam(':discount', $discount, PDO::PARAM_STR);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_OBJ);
+        $discount = $result->discount;
+    }
 
     if (isset($_GET['rem'])) {
         $productid = secure($_GET['rem']);
@@ -32,8 +41,6 @@ if (isset($_SESSION['user_id'])) {
     $total = $query->fetch(PDO::FETCH_OBJ);
 }
 
-
-echo json_encode($_SESSION);
 
 ?>
 <!DOCTYPE html>
@@ -64,7 +71,7 @@ echo json_encode($_SESSION);
 
         <?php if (strlen(isset($_SESSION['user_id']) == 0)) { ?>
             <div class="container mt-5 p-5">
-                <h3 class="p-5 m-5 text-center">Please Login To Check Cart</h3>
+                <h3 class="p-5 m-5 text-center">Please <a href="./login.php">Login</a> To Check Cart</h3>
             </div>
 
         <?php } else { ?>
@@ -79,13 +86,17 @@ echo json_encode($_SESSION);
                 <div class="col-md-5  ">
                     <?php if (isset($results)) {
                         foreach ($results as $i => $result) {
-                            $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'] ?? null;
+                            $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'];
+                            $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'];
+
                             ?>
-                            <div class="card cart-item p-4 mb-3 shadow-lg rounded-3 " data-qty="1" style=" height: auto; ">
-                                <div class=" content rounded-3">
+                            <div class="card cart-item mb-3 shadow-lg " data-qty="<?= $qty ?? $result->quantity ?>"
+                                style="border-radius: 20px;">
+                                <div class=" card-body">
                                     <div class="row">
                                         <div class="col-md-3" style="width: 100px; height: auto;">
-                                            <img src="./img/products/<?= $result->img ?>" alt="" class="img-fluid">
+                                            <img src="./img/products/<?= $result->img ?>" alt="" class="img-fluid"
+                                                style="border-radius: 10px;">
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <h6 class="text-truncate" style="width: 150px;"><?= $result->title ?></h6>
@@ -93,29 +104,24 @@ echo json_encode($_SESSION);
                                                 <?= $formatter->formatCurrency($result->price, "IDR") ?>
                                             </p>
                                         </div>
-                                        <div class="col-md-3">
-                                            <h6 class="ml-4 mb-3">Quantity</h6>
-                                            <button type="button" class="btn btn-outline-dark mr-3 minus"
-                                                data-id="<?= $result->id ?>">-</button>
-                                            <span class="quantity">
-                                                <?= $qty ?? $result->quantity ?>
-                                            </span>
-                                            <button type="button" class="btn btn-outline-dark ml-3 add"
-                                                data-id="<?= $result->id ?>">+</button>
+                                        <div class="col-md-3  " style="padding-top: 0px;">
+                                            <h6 class=" mb-3 text-center">Quantity</h6>
+                                            <div class="row justify-content-center ">
+                                                <button type="button" class="btn mr-2 btn-outline-dark  minus"
+                                                    data-id="<?= $result->id ?>"
+                                                    style="width: 30px;height: 30px; text-align: center; padding-top: 0px;">-</button>
+                                                <span class="quantity">
+                                                    <?= $qty ?? $result->quantity ?>
+                                                </span>
+                                                <button type="button"
+                                                    style="width: 30px;height: 30px; text-align: center; padding: 0px;"
+                                                    class="btn btn-outline-dark ml-2  add" data-id="<?= $result->id ?>">+</button>
+                                            </div>
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <h6>Total</h6>
                                             <p class="text-muted total">
-                                                <?php
-                                                if (isset($qty) > 1) {
-                                                    echo $formatter->formatCurrency($result->price * isset($qty), "IDR");
-                                                } else if ($result->quantity > 1) {
-                                                    echo $formatter->formatCurrency($result->price * $result->quantity, "IDR");
-                                                } else {
-                                                    echo $formatter->formatCurrency($result->price, "IDR");
-
-                                                }
-                                                ?>
+                                                <?= $formatter->formatCurrency($total == 0 ? $result->price : $total, "IDR") ?>
                                             </p>
 
                                         </div>
@@ -127,25 +133,17 @@ echo json_encode($_SESSION);
                 </div>
                 <!-- Side Card Section -->
                 <div class="col-md-3">
-                    <div class="card p-4 mb-3 shadow-sm">
-                        <h6 class="mb-3">Calculated Shipping</h6>
-                        <form>
+                    <div class="card p-4 mb-3 shadow-sm" style="border-radius: 20px;">
+                        <h6 class="mb-3">Voucher Discount</h6>
+                        <form action="mychart.php" method="post">
                             <div class="mb-2">
-                                <select class="form-select" aria-label="Country">
-                                    <option selected>Country</option>
-                                    <option value="1">USA</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">UK</option>
-                                </select>
+                                <input type="text" class="form-control" name="discount" placeholder="Enter voucher code">
                             </div>
-                            <div class="mb-2">
-                                <input type="text" class="form-control" placeholder="ZIP Code">
-                            </div>
-                            <button type="button" class="btn btn-primary w-100">Update</button>
+                            <button type="button" name="submit" class="btn btn-primary w-100">Apply</button>
                         </form>
                     </div>
 
-                    <div class="card p-4 shadow-sm">
+                    <div class="card p-4 shadow-sm" style="border-radius: 20px;">
                         <h6 class="mb-3">Cart Total</h6>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Cart Subtotal</span>
@@ -157,7 +155,7 @@ echo json_encode($_SESSION);
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Discount</span>
-                            <span>$0.00</span>
+                            <span><?= $discount ?? 0 ?></span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between fw-bold">

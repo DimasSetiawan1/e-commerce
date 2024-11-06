@@ -13,27 +13,26 @@ document.querySelectorAll('.add, .minus').forEach(button => {
         let quantity = parseInt(cartItem.getAttribute('data-qty'));
         let total = parseInt(cartItem.querySelector('.total').textContent.replace(/[^0-9]/g, ''));
         let price = parseInt(cartItem.querySelector('.price').textContent.replace(/[^0-9]/g, ''));
+        const isAddAction = this.classList.contains('add');
+        
+        quantity = isAddAction ? quantity + 1 : quantity > 1 ? quantity - 1 : null;
+        
+        
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'update_cart.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                console.log(xhr.responseText); 
+                let data = JSON.parse(xhr.responseText)['data'];
+                cartItem.setAttribute('data-qty', data['quantity']);
+                cartItem.querySelector('.quantity').textContent = data['quantity'];
+                cartItem.querySelector('.total').textContent = currencyFormat(data['total']);
             }
         };
 
-        if (this.classList.contains('add')) {
-            quantity++;
-            xhr.send(`action=add&id=${itemId}&qty=${quantity}`);
-            cartItem.querySelector('.total').textContent = currencyFormat(total + price);
-        } else if (this.classList.contains('minus') && quantity > 1) {
-            quantity--;
-            xhr.send(`action=minus&id=${itemId}&qty=${quantity}`);
-            cartItem.querySelector('.total').textContent = currencyFormat(total - price);
-        }
-        cartItem.setAttribute('data-qty', quantity);
-        cartItem.querySelector('.quantity').textContent = quantity;
-        // console.log(`Item ID: ${itemId}, Quantity: ${quantity}`)
+        xhr.send(`id=${itemId}&qty=${quantity}&price=${price}`);
+
+
         
     });
 });

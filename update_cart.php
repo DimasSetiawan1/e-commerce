@@ -1,16 +1,18 @@
 <?php
-
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include_once 'config.php';
+// include_once 'mycart.php';
+
 
 if (isset($_SESSION['user_id'])) {
 
-
-    switch ($_POST['action']) {
+    if (!isset($_POST['action']))
+        echo '';
+    switch (isset($_POST['action']) ? $_POST['action'] : '') {
         case 'updateCart':
             $product_id = secure($_POST['id']);
             $quantity = secure($_POST['qty']);
@@ -62,7 +64,7 @@ if (isset($_SESSION['user_id'])) {
         default:
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Action Not Found'
+                'message' => 'What are you doing ?'
             ]);
             break;
     }

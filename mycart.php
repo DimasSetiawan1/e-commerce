@@ -45,8 +45,6 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/style.css">
-    <link href="./admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <link href="./admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
@@ -141,7 +139,7 @@ if (isset($_SESSION['user_id'])) {
                         <h6 class="mb-3">Cart Total</h6>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Cart Subtotal</span>
-                            <span>$71.00</span>
+                            <span id="subtotal">0</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Shipping & Handling</span>
@@ -154,7 +152,7 @@ if (isset($_SESSION['user_id'])) {
                         <hr>
                         <div class="d-flex justify-content-between fw-bold">
                             <span>Total</span>
-                            <span>$87.50</span>
+                            <span id="total"></span>
                         </div>
                         <button type="button" class="btn btn-primary w-100 mt-3">Checkout</button>
                     </div>

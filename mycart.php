@@ -7,15 +7,7 @@ $discount = 0;
 
 if (isset($_SESSION['user_id'])) {
     $user = $_SESSION['user_id'];
-    if (isset($_GET['submit'])) {
-        $discount = secure($_GET['discount']);
-        $sql = "SELECT * FROM discount_03 WHERE code = (:discount)";
-        $query = $db->prepare($sql);
-        $query->bindParam(':discount', $discount, PDO::PARAM_STR);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_OBJ);
-        $discount = $result->discount;
-    }
+
 
     if (isset($_GET['rem'])) {
         $productid = secure($_GET['rem']);
@@ -133,14 +125,16 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <!-- Side Card Section -->
                 <div class="col-md-3">
-                    <div class="card p-4 mb-3 shadow-sm" style="border-radius: 20px;">
+                    <div class="card p-4 mb-3 shadow-sm cart-discount" style="border-radius: 20px;">
                         <h6 class="mb-3">Voucher Discount</h6>
-                        <form action="mychart.php" method="post">
-                            <div class="mb-2">
-                                <input type="text" class="form-control" name="discount" placeholder="Enter voucher code">
-                            </div>
-                            <button type="button" name="submit" class="btn btn-primary w-100">Apply</button>
-                        </form>
+                        <div id="msg" class="alert alert-success d-none">
+                            <strong>Voucher Applied! </strong>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control inputVoucher" placeholder="Enter voucher code">
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 addDiscount">Apply</button>
+
                     </div>
 
                     <div class="card p-4 shadow-sm" style="border-radius: 20px;">
@@ -153,9 +147,9 @@ if (isset($_SESSION['user_id'])) {
                             <span>Shipping & Handling</span>
                             <span>$8.50</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between mb-2 setDiscount">
                             <span>Discount</span>
-                            <span><?= $discount ?? 0 ?></span>
+                            <span class="discount">0</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between fw-bold">
@@ -168,6 +162,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
         <?php } ?>
 
+
         <?php include('./inc/footer.php'); ?>
     </section>
 
@@ -177,6 +172,8 @@ if (isset($_SESSION['user_id'])) {
     <script src="./js/popper.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/cart.js"></script>
+
+
 </body>
 
 </html>

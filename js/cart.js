@@ -30,9 +30,37 @@ document.querySelectorAll('.add, .minus').forEach(button => {
             }
         };
 
-        xhr.send(`id=${itemId}&qty=${quantity}&price=${price}`);
+        xhr.send(`action=updateCart&id=${itemId}&qty=${quantity}&price=${price}`);
 
 
         
     });
 });
+
+document.querySelector('.addDiscount').addEventListener('click', function() {
+    const cartDiscount = document.querySelector('.cart-discount');
+    const setDiscount = document.querySelector('.setDiscount');
+    let inputValue = cartDiscount.querySelector('.inputVoucher').value;
+
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'update_cart.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            let data = JSON.parse(xhr.responseText)['data'];
+            setDiscount.querySelector('.discount').textContent = `${data['discount']}%`;
+            $(document).ready(function () {
+                setTimeout(function () {
+                  $('#msg').slideUp("slow");
+                }, 2000);
+              });
+        }else{
+            setDiscount.querySelector('.discount').textContent = 0;
+        }
+    };
+
+    xhr.send(`action=getDiscount&voucher=${inputValue}`);
+    
+})
+

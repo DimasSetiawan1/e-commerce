@@ -76,8 +76,8 @@ if (isset($_SESSION['user_id'])) {
                 <div class="col-md-5  ">
                     <?php if (isset($results)) {
                         foreach ($results as $i => $result) {
-                            $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'];
-                            $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'];
+                            $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'] ?? $result->quantity;
+                            $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'] ?? $result->price * $qty;
 
                             ?>
                             <div class="card cart-item mb-3 shadow-lg " data-qty="<?= $qty ?? $result->quantity ?>"
@@ -125,8 +125,8 @@ if (isset($_SESSION['user_id'])) {
                 <div class="col-md-3">
                     <div class="card p-4 mb-3 shadow-sm cart-discount" style="border-radius: 20px;">
                         <h6 class="mb-3">Voucher Discount</h6>
-                        <div id="msg" class="alert alert-success d-none">
-                            <strong>Voucher Applied! </strong>
+                        <div id="alert" class="alert d-none">
+                            <strong class="text-notification"></strong>
                         </div>
                         <div class="mb-2">
                             <input type="text" class="form-control inputVoucher" placeholder="Enter voucher code">
@@ -141,10 +141,6 @@ if (isset($_SESSION['user_id'])) {
                             <span>Cart Subtotal</span>
                             <span id="subtotal">0</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Shipping & Handling</span>
-                            <span>$8.50</span>
-                        </div>
                         <div class="d-flex justify-content-between mb-2 setDiscount">
                             <span>Discount</span>
                             <span class="discount">0</span>
@@ -154,7 +150,7 @@ if (isset($_SESSION['user_id'])) {
                             <span>Total</span>
                             <span id="total"></span>
                         </div>
-                        <button type="button" class="btn btn-primary w-100 mt-3">Checkout</button>
+                        <button type="submit" name="" class="btn btn-primary w-100 mt-3">Checkout</button>
                     </div>
                 </div>
             </div>

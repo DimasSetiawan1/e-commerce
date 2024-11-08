@@ -73,14 +73,24 @@ function applyDiscount(){
             let data = JSON.parse(xhr.responseText)['data'];
             setDiscount.querySelector('.discount').textContent = `${data['discount']}%`;
             updateTotal();
-            $('#msg').removeClass('d-none');
+            document.querySelector('.text-notification').textContent = "Voucher discount applied!";
+            $('#alert').removeClass('alert-danger');
+            $('#alert').addClass('alert-success');
+            $('#alert').removeClass('d-none');
             setTimeout(function () {
-                $('#msg').addClass('d-none');
+                $('#alert').addClass('d-none');
             }, 2000);
-
+            isDiscount = true
 
         }else{
             setDiscount.querySelector('.discount').textContent = 0;
+            document.querySelector('.text-notification').textContent = "Voucher discount not found!";
+            $('#alert').addClass('alert-danger');
+            $('#alert').removeClass('d-none');
+            setTimeout(function () {
+                $('#alert').addClass('d-none');
+            }, 2000);
+            isDiscount = false
         }
     };
 

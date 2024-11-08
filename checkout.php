@@ -92,26 +92,16 @@ if (isset($_SESSION['username'])) {
     <section>
         <?php include('./inc/header.php'); ?>
 
-        <?php if (strlen(isset($_SESSION['user_id']) == 0)) { ?>
-            <div class="container mt-5 p-5">
-                <h3 class="p-5 m-5 text-center">Please Login To Check Cart</h3>
-            </div>
+        <?php if (strlen(isset($_SESSION['user_id']) == 0)) {
+            header("Location: login.php");
+            ?>
         <?php } else { ?>
-            <div class="container mt-5 p-5">
-                <div class="clearfix">
-                    <h3 class="py-4 float-left">My Cart <?= isset($itemCount) ? "( $itemCount )" : "" ?></h3>
-                    <h3 class="py-4 float-right">Total : <?= $formatter->formatCurrency($total->total, "IDR") ?></h3>
+            <div class="row">
+                <div class="col-md-5">
+                
                 </div>
+                <div class="col-md-4">
 
-                <div class="row justify-content-md-center">
-                    <div class="col-8">
-                        <form class="text-center border border-light p-5" method="post">
-                            <p class="h4 mb-4">Delivery Details</p>
-                            <input name="address" type="text" class="form-control mb-4"
-                                placeholder="Please Enter Complete Address" required>
-                            <input class="btn btn-primary" type="submit" value="Place Order" name="orderplace">
-                        </form>
-                    </div>
                 </div>
             </div>
         <?php } ?>

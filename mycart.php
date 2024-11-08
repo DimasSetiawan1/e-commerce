@@ -78,7 +78,6 @@ if (isset($_SESSION['user_id'])) {
                         foreach ($results as $i => $result) {
                             $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'] ?? $result->quantity;
                             $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'] ?? $result->price * $qty;
-
                             ?>
                             <div class="card cart-item mb-3 shadow-lg " data-qty="<?= $qty ?? $result->quantity ?>"
                                 style="border-radius: 20px;">

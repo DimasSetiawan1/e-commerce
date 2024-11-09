@@ -97,6 +97,35 @@ function applyDiscount(){
     xhr.send(`action=getDiscount&voucher=${inputValue}`);
 }
 
+function removeCart(id) {
+    console.log(id)
+    const xhr = new XMLHttpRequest
+    xhr.open('POST', 'update_cart.php', true)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            let data = JSON.parse(xhr.responseText);
+            if (data['status'] == 'success') {
+                setTimeout(() => {
+                    const alertElement = document.getElementById("autoDismis")
+                    const alertMsg = document.querySelector(".msg")
+                    alerMsg.textContent = data['message']
+                    if (alertElement) {
+                        alertElement.classList.remove("show")
+                        alertElement.classList.add("fade")
+                    }
+
+                    setTimeout(() => {
+                        alertElement.remove()
+                    }, 500);
+                }, 3000);
+                updateTotal()
+            }
+        }
+    }
+
+    xhr.send(`action=removeCart&id=${id}`)
+}
 
 document.querySelector('.addDiscount').addEventListener('click', applyDiscount);
 
@@ -107,3 +136,9 @@ document.querySelector('.inputVoucher').addEventListener('keydown', function(eve
         applyDiscount();
     }
 });
+
+
+
+function toCheckout() {
+    window.location.href = 'checkout.php';
+}

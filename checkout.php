@@ -107,8 +107,7 @@ if (isset($_SESSION['user_id'])) {
             <div class="row mx-auto  p-5">
                 <div class="col-md-6">
                     <span class="h3 fw-bold "> Checkout </span>
-                    <div class="card cart-item mb-3 mt-3 shadow-lg p-3" data-qty="<?= $qty ?? $result->quantity ?>"
-                        style="border-radius: 20px;">
+                    <div class="card cart-item mb-3 mt-3 shadow-lg p-3" style="border-radius: 20px;">
                         <div class="card-body">
                             <div class="row mb-3 justify-content-around">
                                 <div class="col-md-6">

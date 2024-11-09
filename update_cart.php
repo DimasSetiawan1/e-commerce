@@ -60,7 +60,17 @@ if (isset($_SESSION['user_id'])) {
                 ]
             ]);
             break;
-
+        case 'removeCart':
+            $product_id = secure($_POST['id']);
+            $sql = "DELETE FROM cart_03 WHERE productid = (:productid)";
+            $query = $db->prepare($sql);
+            $query->bindParam(':productid', $product_id, PDO::PARAM_STR);
+            $query->execute();
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Product removed from cart'
+            ]);
+            break;
         default:
             echo json_encode([
                 'status' => 'error',

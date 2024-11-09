@@ -9,14 +9,6 @@ if (isset($_SESSION['user_id'])) {
     $user = $_SESSION['user_id'];
 
 
-    if (isset($_GET['rem'])) {
-        $productid = secure($_GET['rem']);
-        $sql = "DELETE FROM cart_03 WHERE id = (:productid)";
-        $query = $db->prepare($sql);
-        $query->bindParam(':productid', $productid, PDO::PARAM_STR);
-        $query->execute();
-    }
-
     // FECTH PRODUCTS
     $sql = "SELECT cart_03.id,cart_03.quantity,products_03.title,products_03.price,products_03.img FROM cart_03 INNER JOIN products_03 ON products_03.id = cart_03.productid WHERE cart_03.user=:user";
     $query = $db->prepare($sql);
@@ -70,6 +62,17 @@ if (isset($_SESSION['user_id'])) {
                 <p class="text-muted  "><?= isset($itemCount) ? "$itemCount" : "" ?> items in your cart
                 </p>
             </div>
+            <div class="toast fade top-0 end-0 m-3 position-fixed " id="autoDismis" role="alert" aria-live="assertive"
+                aria-atomic="true">
+                <div class="toast-header text-dark bg-success">
+                    <strong class="me-auto">Success</strong>
+                    <small>now</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body msg">
+                    
+                </div>
+            </div>
 
             <div class="row  justify-content-center ">
                 <!-- Product Card Section -->
@@ -81,24 +84,24 @@ if (isset($_SESSION['user_id'])) {
                             ?>
                             <div class="card cart-item mb-3 shadow-lg " data-qty="<?= $qty ?? $result->quantity ?>"
                                 style="border-radius: 20px;">
-                                <div class=" card-body">
-                                    <div class="row">
-                                        <div class="col-md-3" style="width: 100px; height: auto;">
+                                <div class="card-body">
+                                    <div class="row ">
+                                        <div class="col-md-3 align-content-center" style="width: 100px; height: auto;">
                                             <img src="./img/products/<?= $result->img ?>" alt="" class="img-fluid"
                                                 style="border-radius: 10px;">
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-3 mb-3  align-content-center">
                                             <h6 class="text-truncate" style="width: 150px;"><?= $result->title ?></h6>
                                             <p class="text-muted my-3 price">
                                                 <?= $formatter->formatCurrency($result->price, "IDR") ?>
                                             </p>
                                         </div>
-                                        <div class="col-md-3  " style="padding-top: 0px;">
-                                            <h6 class=" mb-3 text-center">Quantity</h6>
-                                            <div class="row justify-content-center ">
+                                        <div class="col-md-2 mb-3 text-center align-content-center ">
+                                            <h6 class=" mb-3 mr-3 ">Quantity</h6>
+                                            <div class="row mx-auto">
                                                 <button type="button" class="btn mr-2 btn-outline-dark  minus"
                                                     data-id="<?= $result->id ?>"
-                                                    style="width: 30px;height: 30px; text-align: center; padding-top: 0px;">-</button>
+                                                    style="width: 30px;height: 30px; text-align: center; ">-</button>
                                                 <span class="quantity">
                                                     <?= $qty ?? $result->quantity ?>
                                                 </span>
@@ -107,16 +110,21 @@ if (isset($_SESSION['user_id'])) {
                                                     class="btn btn-outline-dark ml-2  add" data-id="<?= $result->id ?>">+</button>
                                             </div>
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-2 text-center  mb-3  align-content-center  ">
                                             <h6>Total</h6>
                                             <p class="text-muted total">
                                                 <?= $formatter->formatCurrency($total == 0 ? $result->price : $total, "IDR") ?>
                                             </p>
-
                                         </div>
+                                        <div class="col-md-2  align-content-center text-center">
+                                            <button class="btn btn-outline-danger fa fa-trash bg-text-danger delete"
+                                                onClick="removeCart(<?= $result->id ?>)"></button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
+
                         <?php } ?>
                     <?php } ?>
                 </div>
@@ -149,7 +157,8 @@ if (isset($_SESSION['user_id'])) {
                             <span>Total</span>
                             <span id="total"></span>
                         </div>
-                        <button type="submit" name="" class="btn btn-primary w-100 mt-3">Checkout</button>
+                        <button type="submit" name="" class="btn btn-primary w-100 mt-3"
+                            onclick="toCheckout()">Checkout</button>
                     </div>
                 </div>
             </div>

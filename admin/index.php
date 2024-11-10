@@ -176,7 +176,8 @@ try {
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                     Jumlah Produk</div>
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                    <?= $total_products ?></div>
+                                                    <?= $total_products ?>
+                                                </div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
@@ -197,7 +198,7 @@ try {
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $total_users ?>
                                                 </div>
                                             </div>
-                                            <div class="col-auto">
+                                            <div class="col-auto">  
                                                 <i class="fas fa-users fa-2x text-gray-300"></i>
                                             </div>
                                         </div>

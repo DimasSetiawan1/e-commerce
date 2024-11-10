@@ -136,7 +136,7 @@ if (!$search) {
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="price" class="col-form-label">Price
-                                                        (<?= CURRENCY ?>)</label>
+                                                        (Rp)</label>
                                                     <input type="number" name="price" class="form-control" id="price"
                                                         required>
                                                 </div>
@@ -323,7 +323,7 @@ if (!$search) {
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label for="price" class="col-form-label">Price
-                                                                                (<?= CURRENCY ?>)</label>
+                                                                                (Rp)</label>
                                                                             <input type="number" name="price"
                                                                                 class="form-control" id="price"
                                                                                 value="<?= $product->price ?>">

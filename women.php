@@ -81,9 +81,9 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
         if ($query->rowCount() > 0) {
           foreach ($results as $result) { ?>
             <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card h-100">
+              <div class="card h-100 border-0 shadow-lg">
                 <a href="#"><img class="card-img-top" src="./img/products/<?= $result->img; ?>" alt="<?= $result->title; ?>"
-                    title="<?= $result->title; ?>"></a>
+                    alt="<?= $result->title; ?>" title="<?= $result->title; ?>"></a>
                 <div class="card-body">
                   <h4 class="card-title">
                     <a href="#"><?= $result->title; ?></a>

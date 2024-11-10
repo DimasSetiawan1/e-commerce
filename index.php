@@ -74,7 +74,7 @@ if (isset($_GET['add'])) {
 
     <div class="container mt-5 my-section">
       <h3 class="py-4">Popular Products</h3>
-      <div class="msg"><?php echo $msg; ?></div>
+      <div class="msg"><?= $msg; ?></div>
       <div class="row">
 
         <?php
@@ -88,7 +88,7 @@ if (isset($_GET['add'])) {
         if ($query->rowCount() > 0) {
           foreach ($results as $result) { ?>
             <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card h-100">
+              <div class="card h-100 border-0 shadow-lg">
                 <a href="#"><img class="card-img-top" src="./img/products/<?php echo $result->img; ?>"
                     alt="<?php echo $result->title; ?>" title="<?php echo $result->title; ?>"></a>
                 <div class="card-body">
@@ -130,7 +130,7 @@ if (isset($_GET['add'])) {
         if ($query->rowCount() > 0) {
           foreach ($results as $result) { ?>
             <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card h-100">
+              <div class="card h-100 border-0 shadow-lg">
                 <a href="#"><img class="card-img-top" src="./img/products/<?php echo $result->img; ?>"
                     alt="<?php echo $result->title; ?>" title="<?php echo $result->title; ?>"></a>
                 <div class="card-body">
@@ -173,7 +173,7 @@ if (isset($_GET['add'])) {
         if ($query->rowCount() > 0) {
           foreach ($results as $result) { ?>
             <div class="col-lg-3 col-md-6 mb-4">
-              <div class="card h-100">
+              <div class="card h-100 border-0 shadow-lg">
                 <a href="#"><img class="card-img-top" src="./img/products/<?php echo $result->img; ?>"
                     alt="<?php echo $result->title; ?>" title="<?php echo $result->title; ?>"></a>
                 <div class="card-body">
@@ -202,13 +202,13 @@ if (isset($_GET['add'])) {
     <?php include('./inc/footer.php'); ?>
   </section>
 
-  <script src="./js/jquery-3.3.1.slim.min.js"></script>
+  <script src="./js/jquery-3.3.1.js"></script>
   <script src="./js/popper.min.js"></script>
   <script src="./js/bootstrap.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       setTimeout(function () {
-        $('#msg').slideUp("slow");
+        $('#msg').slideUp("slow")
       }, 2000);
     });
   </script>

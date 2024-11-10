@@ -93,8 +93,8 @@ function applyDiscount(){
             isDiscount = false
         }
     };
-
     xhr.send(`action=getDiscount&voucher=${inputValue}`);
+
 }
 
 function removeCart(id) {
@@ -106,19 +106,17 @@ function removeCart(id) {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             let data = JSON.parse(xhr.responseText);
             if (data['status'] == 'success') {
+                const alertElement = document.querySelector("statusSuccessModal")
+                const alertMsg = document.querySelector(".msg")
                 setTimeout(() => {
-                    const alertElement = document.getElementById("autoDismis")
-                    const alertMsg = document.querySelector(".msg")
-                    alerMsg.textContent = data['message']
+                    alertMsg.textContent = data['message']
                     if (alertElement) {
-                        alertElement.classList.remove("show")
-                        alertElement.classList.add("fade")
+                        alertElement.classList.remove("fade")
+                        alertElement.classList.add("show")
                     }
-
-                    setTimeout(() => {
-                        alertElement.remove()
-                    }, 500);
-                }, 3000);
+                }, 2000);
+                
+                alertElement.remove()
                 updateTotal()
             }
         }
@@ -129,10 +127,10 @@ function removeCart(id) {
 
 document.querySelector('.addDiscount').addEventListener('click', applyDiscount);
 
-// Event listener untuk "Enter" pada input voucher
+
 document.querySelector('.inputVoucher').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Mencegah submit form jika ada
+        event.preventDefault(); 
         applyDiscount();
     }
 });

@@ -80,136 +80,145 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
 
-            <div class="container ">
-                <div class="d-md-flex flex-column ">
-                    <h2 class="my-3 ">Shopping Bag</h2>
-                    <p class="text-muted  "><?= isset($itemCount) ? "$itemCount" : "" ?> items in your cart
-                    </p>
-                </div>
-                <div class="row row-cols-md-2  row-cols-sm-1 justify-content-center ">
+            <section class="h-100 h-custom">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12">
+                            <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                                <div class="card-body p-0">
+                                    <div class="row g-0">
+                                        <div class="col-lg-8">
+                                            <div class="p-5">
+                                                <div class="d-flex justify-content-between align-items-center mb-5">
+                                                    <h1 class="fw-bold mb-0">Shopping Cart</h1>
+                                                    <h6 class="mb-0 text-muted"><?= isset($itemCount) ? "$itemCount" : "" ?>
+                                                        items</h6>
+                                                </div>
+                                                <hr class="my-4">
+                                                <?php if (isset($results)) {
+                                                    foreach ($results as $i => $result) {
+                                                        $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'] ?? $result->quantity;
+                                                        $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'] ?? $result->price * $qty;
+                                                        ?>
+                                                        <div
+                                                            class="row mb-4 d-flex justify-content-between align-items-center cart-item ">
+                                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                                <img src="./img/products/<?= $result->img ?>"
+                                                                    class="img-fluid rounded-3" alt="<?= $result->title ?>">
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                                <h6 class="text-muted">Shirt</h6>
+                                                                <h6 class="mb-0"><?= $result->title ?></h6>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                                                <button data-mdb-button-init data-mdb-ripple-init
+                                                                    class="btn btn-link px-2 minus" data-id="<?= $result->id ?>"
+                                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                                    <i class="fas fa-minus"></i>
+                                                                </button>
 
-                    <!-- Product Card Section -->
-                    <div class="col-sm-5 col-md-5">
-                        <?php if (isset($results)) {
-                            foreach ($results as $i => $result) {
-                                $qty = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['quantity'] ?? $result->quantity;
-                                $total = $_SESSION['cart'][$_SESSION['user_id']][$result->id]['total'] ?? $result->price * $qty;
-                                ?>
-                                <div class="card cart-item mb-3 shadow-lg bg-dark " data-qty="<?= $qty ?? $result->quantity ?>"
-                                    style="border-radius: 20px;">
-                                    <img src="./img/products/<?= $result->img ?>" alt="" style="height: 15rem; height: 15rem;"
-                                        class="card-img-top" />
-                                    <div class="card-body d-flex align-items-center">
-                                        <!-- <div class="row "> -->
-                                        <!-- Gambar produk -->
-                                        <!-- <div class="row "> -->
-                                        <!--  <div class="col-md-3 col-sm-3 bg-danger align-content-center"> -->
-                                        <!-- </div> -->
+                                                                <input id="quantity-<?= $result->id ?>" min="0" value="<?= $qty ?>"
+                                                                    type="number" class="form-control form-control-sm quantity" />
 
+                                                                <button data-mdb-button-init data-mdb-ripple-init
+                                                                    class="btn btn-link px-2 add" data-id="<?= $result->id ?>"
+                                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                                    <i class="fas fa-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                                <h6 class="mb-0 total-<?= $result->id ?>"
+                                                                    data-price="<?= $result->price ?>">
+                                                                    <?= $formatter->formatCurrency($total, "IDR") ?>
+                                                                </h6>
+                                                            </div>
+                                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end ">
+                                                                <a href="#!" class="text-muted"><i class="fas fa-times "
+                                                                        onclick="removeCart(<?= $result->id ?>)"></i></a>
+                                                            </div>
+                                                        </div>
+                                                    <?php }
+                                                } ?>
 
-                                        <!-- Detail produk -->
-                                        <div class="col-md-4 col-sm-4 bg-secondary col-md-3 mb-3  align-content-center">
-                                            <h6 class="text-truncate w-75"><?= $result->title ?></h6>
-                                            <p class="text-muted my-3 price">
-                                                <?= $formatter->formatCurrency($result->price, "IDR") ?>
-                                            </p>
-                                            <button type="button" class=" btn mr-2 btn-outline-dark  minus"
-                                                data-id="<?= $result->id ?>"
-                                                style="width: 30%;height: 30%; text-align: center; padding: 0px;">-</button>
-                                            <span class="quantity mx-2">
-                                                <?= $qty ?? $result->quantity ?>
-                                            </span>
-                                            <button type="button" style="width: 30%;height: 30%; text-align: center; padding: 0px;"
-                                                class=" btn btn-outline-dark ml-2  add" data-id="<?= $result->id ?>">+</button>
+                                                <hr class="my-4">
+
+                                                <div class="pt-5">
+                                                    <h6 class="mb-0"><a href="#!" class="text-body"><i
+                                                                class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a>
+                                                    </h6>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- Tombol hapus -->
-                                        <div
-                                            class="col-md-4 col-sm-4 bg-light col-md-1 order-3 order-md-5 align-content-center text-center">
-                                            <button class="btn btn-outline-danger fa fa-trash bg-text-danger delete"
-                                                onClick="removeCart(<?= $result->id ?>)"></button>
+                                        <div class="col-lg-4 bg-body-tertiary">
+                                            <div class="p-5">
+                                                <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+                                                <hr class="my-4">
+
+                                                <div class="d-flex justify-content-between mb-4">
+                                                    <h5 class="text-uppercase">items
+                                                        <?= isset($itemCount) ? "$itemCount" : "" ?>
+                                                    </h5>
+                                                    <h5>subtotal</h5>
+                                                </div>
+
+                                                <h5 class="text-uppercase mb-3">Shipping</h5>
+
+                                                <div class="mb-4 pb-2">
+                                                    <select data-mdb-select-init>
+                                                        <option value="1">Standard-Delivery- €5.00</option>
+                                                        <option value="2">Two</option>
+                                                        <option value="3">Three</option>
+                                                        <option value="4">Four</option>
+                                                    </select>
+                                                </div>
+
+                                                <h5 class="text-uppercase mb-3">Give code</h5>
+
+                                                <div class="mb-2">
+                                                    <div data-mdb-input-init class="form-outline">
+                                                        <input type="text" id="addDiscount"
+                                                            class="form-control form-control-lg" />
+                                                        <label class="form-label" for="form3Examplea2">Enter
+                                                            your code</label>
+                                                    </div>
+                                                </div>
+                                                <div id="alert" class="alert d-none">
+                                                    <strong class="text-notification"></strong>
+                                                </div>
+
+                                                <hr class="my-4">
+
+                                                <div class="d-flex justify-content-between mb-5">
+                                                    <h5 class="text-uppercase">Total price</h5>
+                                                    <h5>€ 137.00</h5>
+                                                </div>
+
+                                                <button type="button" data-mdb-button-init data-mdb-ripple-init
+                                                    class="btn btn-dark btn-block btn-lg"
+                                                    data-mdb-ripple-color="dark">Register</button>
+
+                                            </div>
                                         </div>
-
-                                        <!-- </div> -->
-                                        <!-- Kuantitas produk -->
-                                        <!-- <div class="col-sm-3  bg-info col-md-3 mb-3  order-4 order-md-3">
-                                        <h6 class="text-center ">Quantity</h6>
-                                        <div class="d-flex justify-content-center align-items-center ">
-                                            <button type="button" class=" btn mr-2 btn-outline-dark  minus"
-                                                data-id="<?= $result->id ?>"
-                                                style="width: 30%;height: 30%; text-align: center; padding: 0px;">-</button>
-                                            <span class="quantity mx-2">
-                                                <?= $qty ?? $result->quantity ?>
-                                            </span>
-                                            <button type="button" style="width: 30%;height: 30%; text-align: center; padding: 0px;"
-                                                class=" btn btn-outline-dark ml-2  add" data-id="<?= $result->id ?>">+</button>
-                                        </div>
-                                    </div> -->
-
-                                        <!-- Total harga -->
-                                        <!-- <div
-                                        class="col-2 bg-success col-md-2 text-center order-5 order-md-4 mb-3  align-content-center  ">
-                                        <h6>Total</h6>
-                                        <p class="text-muted total">
-                                            <?= $formatter->formatCurrency($total == 0 ? $result->price : $total, "IDR") ?>
-                                        </p>
-                                    </div> -->
-
-
-                                        <!-- </div> -->
                                     </div>
                                 </div>
-                            <?php } ?>
-                        <?php } ?>
-                    </div>
-                    <!-- Side Card Section -->
-                    <div class=" col-sm-3  col-md-3">
-                        <div class="card p-4 mb-3 shadow-lg cart-discount" style="border-radius: 20px;">
-                            <h6 class="mb-3">Voucher Discount</h6>
-                            <div id="alert" class="alert d-none">
-                                <strong class="text-notification"></strong>
                             </div>
-                            <div class="mb-2">
-                                <input type="text" class="form-control inputVoucher" placeholder="Enter voucher code">
-                            </div>
-                            <button type="button" class="btn btn-primary w-100 addDiscount">Apply</button>
                         </div>
-                        <!-- <div class="col-sm-3">
-                        </div> -->
-
-                        <div class="card p-4 shadow-lg" style="border-radius: 20px;">
-                            <h6 class="mb-3">Cart Total</h6>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Cart Subtotal</span>
-                                <span id="subtotal">0</span>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2 setDiscount">
-                                <span>Discount</span>
-                                <span class="discount">0</span>
-                            </div>
-                            <hr>
-                            <div class="d-flex justify-content-between fw-bold">
-                                <span>Total</span>
-                                <span id="total"></span>
-                            </div>
-                            <button type="submit" name="" class="btn btn-primary w-100 mt-3"
-                                onclick="toCheckout()">Checkout</button>
-                        </div>
-                        <!-- <div class="col-sm-3">
-                        </div> -->
                     </div>
                 </div>
-            </div>
+            </section>
+            <?php include('./inc/footer.php'); ?>
+
+
 
         <?php } ?>
-
-
-        <?php include('./inc/footer.php'); ?>
     </section>
 
     <script src="./js/jquery-3.3.1.slim.min.js"></script>
     <script src="./js/popper.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./js/cart.js"></script>
+    <script type="module" src="./js/module.js"></script>
+
 
 
 </body>

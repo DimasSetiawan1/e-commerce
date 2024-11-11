@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     if (localStorage.chkbx && localStorage.chkbx != '') {
         $('#chkbx').attr('checked', 'checked');
         $('#email').val(localStorage.email);
@@ -9,7 +9,7 @@ $(function() {
         $('#password').val('');
     }
 
-    $('#chkbx').click(function() {
+    $('#chkbx').click(function () {
         if ($('#chkbx').is(':checked')) {
             localStorage.email = $('#email').val();
             localStorage.password = $('#password').val();

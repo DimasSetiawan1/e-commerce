@@ -1,34 +1,49 @@
 * {
   padding: 0;
   margin: 0;
+  font-style: normal;
 }
+
 
 .navbar-brand {
   font-size: 2rem;
 }
+/* Untuk Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Untuk Firefox */
+input[type=number] {
+    appearance: textfield;
+} 
 
 .my-section img {
   height: 300px;
   object-fit: contain;
   padding-top: 20px;
+
 }
+
 
 @media (min-width: 1025px) {
   .h-custom {
-    height: 100vh !important;
+  height: 100vh !important;
   }
-}
-
-.card-registration .select-input.form-control[readonly]:not([disabled]) {
+  }
+  
+  .card-registration .select-input.form-control[readonly]:not([disabled]) {
   font-size: 1rem;
   line-height: 2.15;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-}
-
-.card-registration .select-arrow {
+  padding-left: .75em;
+  padding-right: .75em;
+  }
+  
+  .card-registration .select-arrow {
   top: 13px;
-}
+  }
 
 .modal#statusSuccessModal .modal-content {
   border-radius: 30px;

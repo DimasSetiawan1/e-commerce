@@ -44,42 +44,60 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrendZ | Online Store for Latest Trends</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <link rel="stylesheet" href="./css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <section>
+    <section style="background-color: #D6D6D6;">
         <?php include('./inc/header.php'); ?>
 
-        <div class="row justify-content-md-center ">
-            <div class="col-sm-4">
-                <form class="text-center border border-light p-5" method="post">
-                    <p class="h4 mb-4">Sign in</p>
-                    <input type="email" name="email" id="email" class="form-control mb-4" placeholder="E-mail" required>
-                    <input type="password" name="password" id="password" class="form-control mb-4"
-                        placeholder="Password" required>
+        <div class="container-fluid my-4">
+            <div class="row d-flex mx-auto justify-content-center">
+                <div class="col-md-4">
+                    <div class="card" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <form action="login.php" method="POST">
+                                <div class="my-md-5 pb-5">
 
-                    <div class="d-flex justify-content-around">
-                        <div>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="chkbx">
-                                <label class="custom-control-label" for="chkbx">Remember me</label>
+                                    <h1 class="fw-bold mb-0">Welcome</h1>
+
+                                    <i class="fas fa-user-astronaut fa-3x my-5"></i>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="email" id="email" name="email"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="email">Email</label>
+                                    </div>
+
+                                    <div class="form-outline mb-3">
+                                        <input type="password" id="password" name="password"
+                                            class="form-control form-control-lg" />
+                                        <label class="form-label" for="password">Password</label>
+                                    </div>
+
+
+                                    <button class="btn btn-primary text-white btn-lg btn-rounded px-5" type="submit"
+                                        name="submit">Login</button>
+
+                                </div>
+                            </form>
+
+                            <div>
+                                <p class="mb-0">Don't have an account? <a href="register.php"
+                                        class="text-body fw-bold">Sign
+                                        Up</a>
+                                </p>
                             </div>
-                        </div>
-                        <div>
-                            <a href="">Forgot password?</a>
+
                         </div>
                     </div>
-                    <input class="btn btn-dark btn-block my-4" name="submit" type="submit" value="Sign In">
-                    <p>Not a member?
-                        <a href="register.php">Register</a>
-                    </p>
-                </form>
+                </div>
             </div>
         </div>
+
         <?php include('./inc/footer.php'); ?>
     </section>
 
@@ -87,7 +105,10 @@ if (isset($_POST['submit'])) {
     <script src="./js/jquery-3.3.1.js"></script>
     <script src="./js/script.js"></script>
     <script src="./js/popper.min.js"></script>
-    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/mdb.umd.min.js"></script>
+    <script src="./js/mdb.min.js"></script>
+
+
 </body>
 
 </html>

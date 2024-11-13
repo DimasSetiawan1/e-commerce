@@ -10,7 +10,8 @@
             data-mdb-parent="#accordionExample">
             <div class="accordion-body active-bar" mdb-data-button-init>
                 <a href="profile.php">
-                    <button data-mdb-ripple-init type="button" class="btn mb-2 btn-link w-100 text-start text-black ">
+                    <button data-mdb-ripple-init type="button"
+                        class="btn mb-2 btn-link w-100 text-start text-black ">
                         Profile
                     </button>
                 </a>

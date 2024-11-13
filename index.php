@@ -56,7 +56,16 @@ if (isset($_GET['add'])) {
   } else {
     echo "<script type='text/javascript'> document.location = 'login.php'; </script>";
   }
-} else {
+}
+
+
+if (isset($_GET['category'])) {
+  $category = secure($_GET['category']);
+  $query = "SELECT * FROM products_03 WHERE category=:category";
+  $search = $db->prepare($query);
+  $search->bindParam(":category", $category, PDO::PARAM_STR);
+  $search->execute();
+  $search_results = $search->fetchAll(PDO::FETCH_OBJ);
 }
 
 ?>
@@ -94,19 +103,21 @@ if (isset($_GET['add'])) {
           </div>
           <!-- card body -->
           <div class="card-body">
-            <form action="" method="POST">
+            <form action="index.php" id="categoryForm" method="GET">
               <div id="select-wrapper" class="select-wrapper">
                 <label for="category">Category</label>
-                <select class="select initialized" id="category" name="category">
-                  <option value="">All</option>
-                  <?php
-                  $sql = "SELECT * FROM categories_03";
-                  $query = $db->prepare($sql);
-                  $query->execute();
-                  $results = $query->fetchAll(PDO::FETCH_OBJ);
-                  foreach ($results as $result) { ?>
-                    <option value="<?php echo $result->id; ?>"><?php echo $result->title; ?></option>
-                  <?php } ?>
+                <select class="select initialized" onchange="setCategory()" id="category" name="category">
+                  <button type="submit">
+                    <option value=""><?= $category ?? "All" ?></option>
+                    <?php
+                    $sql = "SELECT * FROM categories_03";
+                    $query = $db->prepare($sql);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+                    foreach ($results as $result) { ?>
+                      <option value="<?php echo $result->title; ?>"><?php echo $result->title; ?></option>
+                    <?php } ?>
+                  </button>
                 </select>
             </form>
           </div>
@@ -313,9 +324,14 @@ if (isset($_GET['add'])) {
   <script src="./js/jquery-3.3.1.js"></script>
   <script src="./js/popper.min.js"></script>
   <script src="./js/mdb.min.js"></script>
+
   <script src="./js/mdb.umd.min.js"></script>
 
   <script type="text/javascript">
+
+    const setCategory = function () {
+      document.getElementById('categoryForm').submit();
+    }
 
     $(document).ready(function () {
       setTimeout(function () {

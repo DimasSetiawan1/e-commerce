@@ -41,3 +41,4 @@ toggleConfirmPassword.addEventListener("pointerdown", (e) => {
     toggleConfirmPassword.classList.add("fa-eye");
   }
 });
+

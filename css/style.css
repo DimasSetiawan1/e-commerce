@@ -15,7 +15,7 @@
   max-width: 400px; 
 }
 
-.active-bar{
+.active-bar[button]{
   background-color: #555;
   color: #fff;
 }

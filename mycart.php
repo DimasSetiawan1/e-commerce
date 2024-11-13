@@ -34,11 +34,8 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrendZ | Online Store for Latest Trends</title>
-    <!-- <link rel="stylesheet" href="./css/bootstrap.min.css"> -->
-    <!-- <link rel="stylesheet" href="./css/bootstrap-grid.min.css"> -->
-    <!-- <link rel="stylesheet" href="./css/font-awesome.min.css"> -->
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/style.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <script>
@@ -49,8 +46,8 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body>
+    <?php include('./inc/header.php'); ?>
     <section>
-        <?php include('./inc/header.php'); ?>
 
         <?php if (strlen(isset($_SESSION['user_id']) == 0)) { ?>
             <h3 class="p-5 m-5 text-center">Please <a href="./login.php">Login</a> To Check Cart</h3>
@@ -247,15 +244,11 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </section>
             <?php include('./inc/footer.php'); ?>
-
-
-
         <?php } ?>
     </section>
 
-    <!-- <script src="./js/jquery-3.3.1.slim.min.js"></script> -->
+    <script src="./js/jquery-3.3.1.slim.min.js"></script>
     <script src="./js/popper.min.js"></script>
-    <!-- <script src="./js/bootstrap.min.js"></script> -->
     <script src="./js/cart.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>

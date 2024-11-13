@@ -44,17 +44,17 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrendZ | Online Store for Latest Trends</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <section style="background-color: #D6D6D6;">
+    <section style="background-color: #D6D6D6;" class="h-100 h-custom">
         <?php include('./inc/header.php'); ?>
 
-        <div class="container-fluid my-4">
+        <div class="container my-4 ">
             <div class="row d-flex mx-auto justify-content-center">
                 <div class="col-md-4">
                     <div class="card" style="border-radius: 1rem;">
@@ -66,16 +66,20 @@ if (isset($_POST['submit'])) {
 
                                     <i class="fas fa-user-astronaut fa-3x my-5"></i>
 
-                                    <div class="form-outline mb-4">
-                                        <input type="email" id="email" name="email"
-                                            class="form-control form-control-lg" />
+                                    <div class="form-outline mb-4" data-mdb-input-init>
+                                        <input type="email" id="email" name="email" class="form-control form-control-lg"
+                                            required />
                                         <label class="form-label" for="email">Email</label>
+                                        <div class="invalid-feedback">Isi email terlebih dahulu</div>
                                     </div>
 
-                                    <div class="form-outline mb-3">
+                                    <div class="form-outline mb-3" data-mdb-input-init>
                                         <input type="password" id="password" name="password"
-                                            class="form-control form-control-lg" />
+                                            class="form-control form-control-lg" required />
                                         <label class="form-label" for="password">Password</label>
+                                        <div class="invalid-feedback">Isi password terlebih dahulu</div>
+
+
                                     </div>
 
 
@@ -103,7 +107,7 @@ if (isset($_POST['submit'])) {
 
 
     <script src="./js/jquery-3.3.1.js"></script>
-    <script src="./js/script.js"></script>
+    <!-- <script src="./js/script.js"></script> -->
     <script src="./js/popper.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>

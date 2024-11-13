@@ -61,8 +61,8 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrendZ | Online Store for Latest Trends</title>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
@@ -109,7 +109,6 @@ if (isset($_POST['submit'])) {
                                             class="form-control form-control-lg form-icon-trailing" />
                                         <label class="form-label" for="password">Password</label>
                                         <div class="invalid-feedback">Isi password terlebih dahulu</div>
-
                                     </div>
                                     <div class="form-outline mb-4" data-mdb-input-init>
                                         <i class="far fa-eye trailing fa-fw pe-auto" id="showConfirmPassword"></i>
@@ -117,7 +116,6 @@ if (isset($_POST['submit'])) {
                                             class="form-control form-control-lg form-icon-trailing" />
                                         <label class="form-label" for="confirmPassword">Confirm Password</label>
                                         <div class="invalid-feedback">Isi Confirm Password terlebih dahulu</div>
-
                                     </div>
 
 

@@ -22,5 +22,6 @@
     }
   ],
   "liveSassCompile.settings.excludeList": [],
-  "liveSassCompile.settings.includeItems": ["/src/mdb/scss/mdb.pro.scss"]
+  "liveSassCompile.settings.includeItems": ["/src/mdb/scss/mdb.pro.scss"],
+  "liveServer.settings.multiRootWorkspaceName": "e-commerce"
 }

@@ -6,20 +6,7 @@ include('config.php');
 
 
 
-if (isset($_SESSION['user_id'])) {
-    try {
-        $user = $_SESSION['user_id'];
-        $sql = "SELECT cart_03.id,products_03.title,products_03.price,products_03.img FROM cart_03 INNER JOIN products_03 ON products_03.id = cart_03.productid WHERE cart_03.user=:user";
-        $query = $db->prepare($sql);
-        $query->bindParam(':user', $user, PDO::PARAM_STR);
-        $query->execute();
-        $itemCount = $query->rowCount();
-    } catch (\Throwable $th) {
-        echo $th->getMessage();
-        exit();
-    }
-
-} else {
+if (!isset($_SESSION['user_id'])) {
     header("location: login.php");
     exit();
 }

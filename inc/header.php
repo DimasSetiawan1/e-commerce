@@ -3,7 +3,7 @@
     <!-- Container wrapper -->
     <div class="container-fluid px-3">
         <!-- Navbar brand -->
-        <a class="navbar-brand me-2 font-weight-bold  my-3 " href="index.php">
+        <a class="navbar-brand fw-bold " href="index.php">
             <!-- <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="16" alt="MDB Logo"
                 loading="lazy" style="margin-top: -1px;" /> -->
             TrendZ
@@ -19,10 +19,10 @@
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left links -->
-            <ul class="navbar-nav me-auto mx-auto justify-content-center w-sm-50 w-md-75 my-3  ">
-                <form class="d-flex input-group w-sm-50 w-md-50 " action="index.php" method="POST">
-                    <input type="search" name="keyword" class="form-control rounded bg-dark text-white  "
-                        placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+            <ul class="navbar-nav me-auto mx-auto justify-content-center my-3  ">
+                <form class="d-flex input-group form-search" action="index.php" method="POST">
+                    <input type="search" name="keyword" class="form-control rounded bg-dark text-white "
+                        placeholder="Search..." aria-label="Search" aria-describedby="search-addon" />
                     <button class="input-group-text border-0" id="search-addon">
                         <i class="fas fa-search"></i>
                     </button>
@@ -34,53 +34,62 @@
 
             <?php if (strlen(isset($_SESSION['user_id']) == 0)) { ?>
                 <a href="login.php">
-                    <button data-mdb-ripple-init type="button" class="btn btn-link px-3 my-3 me-2">
+                    <button data-mdb-ripple-init type="button" class="btn mx-5 btn-link px-3 my-3 me-2">
                         Login
                     </button>
                 </a>
-                <a class="text-white-50" href="register.php">
-                    <button data-mdb-ripple-init type="button" class="btn  my-3  btn-primary me-3">
+                <a class="text-white-50 " href="register.php">
+                    <button data-mdb-ripple-init type="button" class="btn mx-5 my-3  btn-primary me-3">
                         Sign up
                     </button>
                 </a>
             <?php } else { ?>
 
                 <ul class="navbar-nav">
-                    <ul class="navbar-nav">
-                        <!-- Badge -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="mycart.php">
-                                <span class="badge badge-pill bg-danger">1</span>
-                                <span><i class="fas fa-shopping-cart"></i></span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- Avatar -->
-                    <i class="nav-item dropdown">
-                        <!-- <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                    <div class="container mx-3 me-3">
+                        <div class="row">
+                            <div class="col-6 col-sm-6 ">
+                                <ul class="navbar-nav ps-5 pb-2">
+                                    <!-- Badge -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="mycart.php">
+                                            <span
+                                                class="badge badge-pill bg-danger"><?= $_SESSION['itemCount'] ?? 0 ?></span>
+                                            <span><i class="fas fa-shopping-cart"></i></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-sm-6  ">
+                                <!-- Avatar -->
+                                <li class="nav-item dropdown pe-5 ">
+                                    <!-- <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center" href="#"
                         id="navbarDropdownMenuLink" role="button" aria-expanded="false">
                         <img src="#" class="rounded-circle fa fa-users" height="22" alt="Portrait of a Woman"
                         loading="lazy" />
-                    </a> -->
-                        <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center" href="#"
-                            id="navbarDropdownMenuLink" role="button" aria-expanded="false">
-                            <img src="./img/user.svg" class="rounded-circle" style="margin-right: 10px;" height="25" alt=""
-                                loading="lazy" />
-                            <span style="font-style: normal;">Hi, <?= $_SESSION['username'] ?></span>
-                        </a>
+                            </a> -->
+                                    <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center"
+                                        href="#" id="navbarDropdownMenuLink" role="button" aria-expanded="false">
+                                        <img src="./img/user.svg" class="rounded-circle" style="margin-right: 10px;"
+                                            height="25" alt="" loading="lazy" />
+                                        <span style="font-style: normal;">Hi, <?= $_SESSION['username'] ?></span>
+                                    </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li>
-                                <a class="dropdown-item" href="#">My profile</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#">Settings</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="logout.php">Logout</a>
-                            </li>
-                        </ul>
-                        </li>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <li>
+                                            <a class="dropdown-item" href="profile.php">My profile</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="#">Settings</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="logout.php">Logout</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
                 </ul>
             <?php } ?>
         </div>

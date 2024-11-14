@@ -1,27 +1,66 @@
+// {
+//   "liveSassCompile.settings.compileOnWatch": false,
+//   "liveSassCompile.settings.useNewCompiler": true,
+
+//   "liveSassCompile.settings.watchOnLaunch": true,
+
+//   "liveSassCompile.settings.showOutputWindowOn": "Error",
+
+//   "liveSassCompile.settings.formats": [
+//     {
+//       "format": "expanded",
+//       "extensionName": ".css",
+//       "savePath": null,
+//       "savePathReplacementPairs": null
+//     },
+//     {
+//       "format": "compressed",
+//       "extensionName": ".min.css",
+//       "savePath": null,
+//       "savePathReplacementPairs": null,
+//       "generateMap": false
+//     }
+//   ],
+//   "liveSassCompile.settings.excludeList": [],
+//   "liveSassCompile.settings.includeItems": ["/src/mdb/scss/mdb.pro.scss"],
+//   "liveServer.settings.multiRootWorkspaceName": "e-commerce"
+// }
+
 {
-  "liveSassCompile.settings.compileOnWatch": false,
-  "liveSassCompile.settings.useNewCompiler": true,
-
-  "liveSassCompile.settings.watchOnLaunch": true,
-
-  "liveSassCompile.settings.showOutputWindowOn": "Error",
-
-  "liveSassCompile.settings.formats": [
-    {
-      "format": "expanded",
-      "extensionName": ".css",
-      "savePath": null,
-      "savePathReplacementPairs": null
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.singleQuote": true,
+    "prettier.semi": false,
+    "prettier.tabWidth": 4,
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "Fira Code",
+    "editor.tabCompletion": "on",
+    "tabnine.codeLensEnabled": true,
+    "prettier.trailingComma": "es5",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    {
-      "format": "compressed",
-      "extensionName": ".min.css",
-      "savePath": null,
-      "savePathReplacementPairs": null,
-      "generateMap": false
+    "[php]": {
+        "editor.autoClosingBrackets": "always",
+        "editor.defaultFormatter": "DEVSENSE.phptools-vscode",
+        "editor.autoIndent": "brackets",
+        "editor.codeLens": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.autoClosingBrackets": "always"
+    },
+
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
-  ],
-  "liveSassCompile.settings.excludeList": [],
-  "liveSassCompile.settings.includeItems": ["/src/mdb/scss/mdb.pro.scss"],
-  "liveServer.settings.multiRootWorkspaceName": "e-commerce"
 }

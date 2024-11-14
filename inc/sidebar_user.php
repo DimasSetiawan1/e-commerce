@@ -11,23 +11,23 @@
             <div class="accordion-body active-bar" mdb-data-button-init>
                 <a href="profile.php">
                     <button data-mdb-ripple-init type="button"
-                        class="btn mb-2 btn-link w-100 text-start text-black ">
+                        class="btn mb-2 btn-link w-100 text-start <?php echo ($current_page == 'profile.php') ? 'text-primary fw-bold' : 'text-black'; ?>">
                         Profile
                     </button>
                 </a>
                 <a href="address.php">
-                    <button data-mdb-ripple-init type="button" class="btn mb-2 btn-link w-100 text-start text-black ">
+                    <button data-mdb-ripple-init type="button"
+                        class="btn mb-2 btn-link w-100 text-start <?php echo ($current_page == 'address.php') ? 'text-primary fw-bold' : 'text-black'; ?>">
                         Alamat
                     </button>
                 </a>
                 <a href="change_password.php">
-                    <button data-mdb-ripple-init type="button" class="btn mb-2 btn-link w-100 text-start text-black ">
+                    <button data-mdb-ripple-init type="button"
+                        class="btn mb-2 btn-link w-100 text-start <?php echo ($current_page == 'change_password.php') ? 'text-primary fw-bold' : 'text-black'; ?>">
                         Ubah Password
                     </button>
                 </a>
             </div>
-
         </div>
     </div>
-
 </div>

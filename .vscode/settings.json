@@ -44,6 +44,7 @@
         "editor.autoClosingBrackets": "always",
         "editor.defaultFormatter": "DEVSENSE.phptools-vscode",
         "editor.autoIndent": "brackets",
+        "prettier.singleQuote": true,
         "editor.codeLens": true
     },
     "[typescript]": {

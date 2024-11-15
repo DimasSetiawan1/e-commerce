@@ -44,9 +44,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <div class="row justify-content-between">
                     <div class="col-sm-4 col-md-4 mt-5 ">
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="fw-bold px-3 ">Profile</h4>
-                            </div>
+
                             <div class="card-body align-items-center mx-auto">
                                 <img src="./img/user.png" alt="test" class="rounded-circle " height="100px"
                                     width="100px" loading="lazy" />
@@ -71,66 +69,94 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                     </div>
                     <div class="col-sm-8 col-md-8 mt-5">
+
                         <div class="card text-start">
-                            <h4 class="card-title px-4 ">Profile</h4>
-                            <div class="card-body">
+                            <h3 class="card-title px-4 mx-3 my-4 fw-bold ">Profile</h3>
+                            <div class="card-body d-flex">
                                 <form action="profile_edit.php" method="post" enctype="multipart/form-data">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-outline mb-3" data-mdb-input-init>
-                                                <input type="text" class="form-control" id="name" name="name"
-                                                    value="<?= $user->name; ?>">
-                                                <label for="name" class="form-label">Name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-outline mb-3" data-mdb-input-init>
-                                                <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
-                                                    id="editEmail" onclick="setEmail();"></i>
-                                                <input type="text" id="email" name="email"
-                                                    class="form-control  form-icon-trailing" disabled
-                                                    value="<?= $user->email; ?>" />
-                                                <label class="form-label" for="email">Email</label>
-                                                <!-- <div class="invalid-feedback">Isi Confirm Password terlebih dahulu</div> -->
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><label for="name">Name</label></td>
+                                            <td>
+                                                <div class="form-outline mb-3" data-mdb-input-init>
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        value="<?= $user->name; ?>">
+                                                    <label for="name" class="form-label">Name</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="email">Email</label></td>
+                                            <td>
+                                                <div class="form-outline mb-3" data-mdb-input-init>
+                                                    <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
+                                                        id="editEmail" onclick="setEmail();"></i>
+                                                    <input type="text" id="email" name="email"
+                                                        class="form-control form-icon-trailing" disabled
+                                                        value="<?= $user->email; ?>" />
+                                                    <label class="form-label" for="email">Email</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="phone_number">Nomor Telepon</label></td>
+                                            <td>
+                                                <div class="form-outline mb-3" data-mdb-input-init>
+                                                    <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
+                                                        id="editPhoneNumber" onclick="setPhoneNumber();"></i>
+                                                    <input type="text" id="phone_number" name="phone_number"
+                                                        class="form-control form-icon-trailing" disabled
+                                                        value="<?= $user->phone_number; ?>" />
+                                                    <label class="form-label" for="phone_number">Phone Number</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text-center">
+                                                <button type="submit" class="btn btn-primary btn-rounded">
+                                                    <i class="fas fa-save me-2"></i>Save Changes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </form>
 
-                                <div class="modal fade" id="confirmEmailChangeModal" tabindex="-1"
-                                    aria-labelledby="confirmEmailChangeModalLabel" aria-hidden="true">
+
+                                <div class="modal fade" id="confirmChangeModal" tabindex="-1"
+                                    aria-labelledby="confirmChangeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmEmailChangeModalLabel">Confirm Email
-                                                    Change</h5>
+                                                <h5 class="modal-title" id="confirmChangeModalLabel">
+                                                    <!-- Confirm Email Change -->
+                                                </h5>
                                                 <button type="button" class="btn-close" data-mdb-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to change your email address?
+                                            <div class="modal-body" id="confirmChangeModalBody">
+                                                <!-- Are you sure you want to change your email address? -->
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-mdb-dismiss="modal">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
-                                                    id="confirmEmailChange">Confirm</button>
+                                                    id="confirmChange">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="alert alert-success mb-0 alert-dismissible alert-absolute fade d-none"
-                                    id="emailChangeAlert" role="alert" data-mdb-color="success">
-                                    <i class="fas fa-check me-2"></i>
-                                    Email successfully changed
-                                    <button type="button" class="btn-close ms-2" data-mdb-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
 
-
+                            </div>
+                            <div class="alert alert-success d-none  alert-dismissible fade hide top-1 position-fixed start-0 m-3"
+                                id="alertUpdateProfile" role="alert" data-mdb-color="success">
+                                <i class="fas fa-check me-2"></i>
+                                <span id="alertMessages"></span>
+                                <button type="button" class="btn-close ms-2" data-mdb-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
+
         </section>
     </main>
 
@@ -142,7 +168,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <script src="./js/popper.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
-    <script src="./js/updateEmail.js"></script>
+    <script src="./js/updateProfile.js"></script>
 
 </body>
 

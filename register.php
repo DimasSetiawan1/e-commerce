@@ -25,10 +25,10 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('Email Already Exists')</script>";
     } else {
         try {
-            $sql = "INSERT INTO users_03(name, email, mobile, password) VALUES (:name,:email, :mobile, :password)";
+            $sql = "INSERT INTO users_03(name, email, phone_number, password) VALUES (:name,:email, :phone_number, :password)";
             $query = $db->prepare($sql);
             $query->bindParam(':name', $name, PDO::PARAM_STR);
-            $query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
+            $query->bindParam(':phone_number', $mobile, PDO::PARAM_STR);
             $query->bindParam(':email', $email, PDO::PARAM_STR);
             $query->bindParam(':password', $password, PDO::PARAM_STR);
             $query->execute();

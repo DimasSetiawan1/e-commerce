@@ -35,29 +35,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <section>
             <div class="container mx-auto">
                 <div class="row justify-content-between">
-                    <div class="col-sm-4 col-md-4 mt-5 ">
-                        <div class="card">
-
-                            <div class="card-body align-items-center mx-auto">
-                                <img src="./img/user.png" alt="test" class="rounded-circle " height="100px"
-                                    width="100px" loading="lazy" />
-
-                                <h5 class="mt-3 text-center align-items-center fw-bold ">
-                                    <?= $_SESSION['username']; ?>
-                                </h5>
-
-                            </div>
-                            <div class="card-body">
-                                <?php include_once "./inc/sidebar_user.php" ?>
-                            </div>
-                            <div class="card-body">
-
-                            </div>
-                            <div class="card-footer justify-content-center">
-                                <a href="#" class="btn btn-secondary btn-block">Logout</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php include_once "./inc/sidebar_user.php" ?>
                     <div class="col-sm-8 col-md-8 mt-5">
 
                         <div class="card text-start">
@@ -68,7 +46,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                             <h5 class="card-title">Alamat Saya</h5>
                                         </div>
                                         <div class="col-sm-6 col-md-6 d-flex justify-content-end">
-                                            <button class="btn btn-primary" id="add-address">Tambah Alamat Baru</button>
+                                            <button class="btn btn-primary" id="add-address" data-mdb-ripple-init
+                                                data-mdb-modal-init data-mdb-target="#addressModal">Tambah
+                                                Alamat Baru</button>
                                         </div>
 
                                     </div>
@@ -76,49 +56,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                             </div>
 
-                            <div class="modal fade" id="addressModal" tabindex="-1" role="dialog"
-                                aria-labelledby="addressModalLabel" aria-hidden="true">
-                                cdiv class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="addressModalLabel">Tambah/Edit Alamat</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form id="addressForm">
-                                            <input type="hidden" id="address-id">
-                                            <div class="form-group">
-                                                <label for="label">Label Alamat</label>
-                                                <input type="text" class="form-control" id="label" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="full-address">Alamat Lengkap</label>
-                                                <textarea class="form-control" id="full-address" rows="3"
-                                                    required></textarea>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="city">Kota</label>
-                                                <input type="text" class="form-control" id="city" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="province">Provinsi</label>
-                                                <input type="text" class="form-control" id="province" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="postal-code">Kode Pos</label>
-                                                <input type="text" class="form-control" id="postal-code" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Tutup</button>
-                                        <button type="button" class="btn btn-primary" id="save-address">Simpan</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php include "./inc/modal_address.php" ?>
                         </div>
                         <hr class="my-3">
                         <div class="card">
@@ -136,7 +74,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                                         <div
                                                             class="col-1 col-md-1 text-right d-flex justify-content-center">
                                                             <button class="btn btn-sm h-100 btn-link edit-address"
-                                                                data-id="1">Edit</button>
+                                                                data-mdb-ripple-init data-mdb-modal-init
+                                                                data-mdb-target="#addressModal"
+                                                                id="edit-address">Edit</button>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -180,45 +120,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <script>
-                                $(document).ready(function () {
-                                    $('#add-address').click(function () {
-                                        $('#addressForm')[0].reset();
-                                        $('#address-id').val('');
-                                        $('#addressModal').modal('show');
-                                    });
-
-                                    $('.edit-address').click(function () {
-                                        var addressId = $(this).data('id');
-                                        // Fetch address details and populate the form
-                                        // This is a placeholder. You need to implement the actual data fetching.
-                                        $('#address-id').val(addressId);
-                                        $('#addressModal').modal('show');
-                                    });
-
-                                    $('.delete-address').click(function () {
-                                        var addressId = $(this).data('id');
-                                        if (confirm('Apakah Anda yakin ingin menghapus alamat ini?')) {
-                                            // Delete address
-                                            // This is a placeholder. You need to implement the actual deletion.
-                                        }
-                                    });
-
-                                    $('#save-address').click(function () {
-                                        // Save or update address
-                                        // This is a placeholder. You need to implement the actual saving/updating.
-                                        $('#addressModal').modal('hide');
-                                    });
-                                });
-                            </script> -->
                     </div>
                 </div>
             </div>
@@ -231,7 +138,40 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <script src="./js/popper.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#add-address').click(function () {
+                $('#addressModalLabel').text('Tambah Alamat');
+            });
 
+            $('#edit-address').click(function () {
+                $('#addressModalLabel').text('Edit Alamat');
+            });
+        });
+
+
+
+
+        $(Document).ready(function () {
+
+            const labelInputs = document.querySelectorAll('input[name="label"]');
+            const labelLabels = document.querySelectorAll('.btn-outline-secondary');
+
+            labelInputs.forEach((input, index) => {
+                input.addEventListener('change', function () {
+                    labelLabels.forEach(label => {
+                        label.classList.remove('btn-outline-primary');
+                        label.classList.add('btn-outline-secondary');
+                    });
+
+                    if (this.checked) {
+                        labelLabels[index].classList.remove('btn-outline-secondary');
+                        labelLabels[index].classList.add('btn-outline-primary');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

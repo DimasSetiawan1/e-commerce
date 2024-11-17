@@ -140,3 +140,20 @@ function updateAddress(int $addressId, array $addressData): bool
     return $stmt->execute();
 }
 
+function updateName(int $userId, string $newName): bool
+{
+    global $db;
+
+    try {
+        $newName = secure($newName);
+        $query = "UPDATE users_03 SET name = :name WHERE id = :id";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':name', $newName);
+        $stmt->bindParam(':id', $userId);
+        $stmt->execute();
+        return true;
+    } catch (\Throwable $th) {
+        echo $th->getMessage();
+        return false;
+    }
+}

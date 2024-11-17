@@ -55,7 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'update_phone_number':
             $result = updatePhoneNumber($userId, $_POST['phone']);
             echo json_encode(['success' => $result]);
-
+            break;
+        case 'name_change':
+            $result = updateName($userId, $_POST['name']);
+            echo json_encode(['success' => $result]);
             break;
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action']);

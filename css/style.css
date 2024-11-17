@@ -1,168 +1,158 @@
 * {
-  padding: 0;
-  margin: 0;
-  font-style: normal;
-
+    padding: 0;
+    margin: 0;
+    font-style: normal;
 }
 
-
 .navbar-brand {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 .form-search {
-  width: 25rem;
-  max-width: 400px; 
+    width: 25rem;
+    max-width: 400px;
 }
 
-.active-bar[button]{
-  background-color: #555;
-  color: #fff;
+.active-bar[button] {
+    background-color: #555;
+    color: #fff;
 }
-
 
 @media (max-width: 767px) {
-  .form-search {
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 17rem; 
-    
-  }
-  .btn-login {
-    margin-left: auto;
-    margin-right: auto;
-  }
+    .form-search {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 17rem;
+    }
+    .btn-login {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
-
 
 @media (max-width: 479px) {
-  .form-search {
-    margin-left: auto; 
-    margin-right: auto;
-    max-width: 17rem; 
-  }
-  .btn-login {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
+    .form-search {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 17rem;
+    }
+    .btn-login {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
-
 /* Untuk Chrome, Safari, Edge, Opera */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
 /* Untuk Firefox */
-input[type=number] {
+input[type='number'] {
     appearance: textfield;
-} 
+}
 
 .my-section img {
-  height: 300px;
-  object-fit: contain;
-  padding-top: 20px;
-
+    height: 300px;
+    object-fit: contain;
+    padding-top: 20px;
 }
-
 
 @media (min-width: 1025px) {
-  .h-custom {
-  height: 100vh !important;
-  }
-  
+    .h-custom {
+        height: 100vh !important;
+    }
 }
-  .card-registration .select-input.form-control[readonly]:not([disabled]) {
-  font-size: 1rem;
-  line-height: 2.15;
-  padding-left: .75em;
-  padding-right: .75em;
-  }
-  
-  .card-registration .select-arrow {
-  top: 13px;
-  }
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+}
+
+.card-registration .select-arrow {
+    top: 13px;
+}
 
 .modal#statusSuccessModal .modal-content {
-  border-radius: 30px;
+    border-radius: 30px;
 }
 .modal#statusSuccessModal .modal-content svg {
-  width: 100px;
-  display: block;
-  margin: 0 auto;
+    width: 100px;
+    display: block;
+    margin: 0 auto;
 }
 .modal#statusSuccessModal .modal-content .path {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 0;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
 }
 .modal#statusSuccessModal .modal-content .path.circle {
-  -webkit-animation: dash 0.9s ease-in-out;
-  animation: dash 0.9s ease-in-out;
+    -webkit-animation: dash 0.9s ease-in-out;
+    animation: dash 0.9s ease-in-out;
 }
 .modal#statusSuccessModal .modal-content .path.line {
-  stroke-dashoffset: 1000;
-  -webkit-animation: dash 0.95s 0.35s ease-in-out forwards;
-  animation: dash 0.95s 0.35s ease-in-out forwards;
+    stroke-dashoffset: 1000;
+    -webkit-animation: dash 0.95s 0.35s ease-in-out forwards;
+    animation: dash 0.95s 0.35s ease-in-out forwards;
 }
 .modal#statusSuccessModal .modal-content .path.check {
-  stroke-dashoffset: -100;
-  -webkit-animation: dash-check 0.95s 0.35s ease-in-out forwards;
-  animation: dash-check 0.95s 0.35s ease-in-out forwards;
+    stroke-dashoffset: -100;
+    -webkit-animation: dash-check 0.95s 0.35s ease-in-out forwards;
+    animation: dash-check 0.95s 0.35s ease-in-out forwards;
 }
 
 @-webkit-keyframes dash {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 @keyframes dash {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 @-webkit-keyframes dash {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 @keyframes dash {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
 }
 @-webkit-keyframes dash-check {
-  0% {
-    stroke-dashoffset: -100;
-  }
-  100% {
-    stroke-dashoffset: 900;
-  }
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
 }
 @keyframes dash-check {
-  0% {
-    stroke-dashoffset: -100;
-  }
-  100% {
-    stroke-dashoffset: 900;
-  }
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
 }
 .box00 {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
 }

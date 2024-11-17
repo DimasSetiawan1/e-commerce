@@ -42,84 +42,59 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <section>
             <div class="container mx-auto">
                 <div class="row justify-content-between">
-                    <div class="col-sm-4 col-md-4 mt-5 ">
-                        <div class="card">
-
-                            <div class="card-body align-items-center mx-auto">
-                                <img src="./img/user.png" alt="test" class="rounded-circle " height="100px"
-                                    width="100px" loading="lazy" />
-
-                                <h5 class="mt-3 text-center align-items-center fw-bold ">
-                                    <?= $user->name; ?>
-                                </h5>
-
-                            </div>
-                            <div class="card-body">
-                                <?php include_once "./inc/sidebar_user.php" ?>
-                            </div>
-                            <div class="card-body">
-
-                            </div>
-                            <div class="card-footer justify-content-center">
-                                <a href="#" class="btn btn-secondary btn-block">Logout</a>
-                            </div>
-
-                        </div>
-
-
-                    </div>
+                    <?php include_once "./inc/sidebar_user.php" ?>
                     <div class="col-sm-8 col-md-8 mt-5">
-
-                        <div class="card text-start">
+                        <div class="card text-start ">
                             <h3 class="card-title px-4 mx-3 my-4 fw-bold ">Profile</h3>
                             <div class="card-body d-flex">
-                                <form action="profile_edit.php" method="post" enctype="multipart/form-data">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <td><label for="name">Name</label></td>
-                                            <td>
-                                                <div class="form-outline mb-3" data-mdb-input-init>
-                                                    <input type="text" class="form-control" id="name" name="name"
-                                                        value="<?= $user->name; ?>">
-                                                    <label for="name" class="form-label">Name</label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="email">Email</label></td>
-                                            <td>
-                                                <div class="form-outline mb-3" data-mdb-input-init>
-                                                    <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
-                                                        id="editEmail" onclick="setEmail();"></i>
-                                                    <input type="text" id="email" name="email"
-                                                        class="form-control form-icon-trailing" disabled
-                                                        value="<?= $user->email; ?>" />
-                                                    <label class="form-label" for="email">Email</label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><label for="phone_number">Nomor Telepon</label></td>
-                                            <td>
-                                                <div class="form-outline mb-3" data-mdb-input-init>
-                                                    <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
-                                                        id="editPhoneNumber" onclick="setPhoneNumber();"></i>
-                                                    <input type="text" id="phone_number" name="phone_number"
-                                                        class="form-control form-icon-trailing" disabled
-                                                        value="<?= $user->phone_number; ?>" />
-                                                    <label class="form-label" for="phone_number">Phone Number</label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" class="text-center">
-                                                <button type="submit" class="btn btn-primary btn-rounded">
-                                                    <i class="fas fa-save me-2"></i>Save Changes
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </form>
+                                <table class="table table-responsive table-borderless align-content-start ">
+                                    <tr>
+                                        <td><label for="name">Name</label></td>
+                                        <td>
+                                            <div class="form-outline" data-mdb-input-init>
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                    value="<?= $user->name; ?>">
+                                                <label for="name" class="form-label">Name</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="email">Email</label></td>
+                                        <td>
+                                            <div class="form-outline" data-mdb-input-init>
+                                                <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
+                                                    id="editEmail" onclick="setEmail();"></i>
+                                                <input type="text" id="email" name="email"
+                                                    class="form-control form-icon-trailing" disabled
+                                                    value="<?= $user->email; ?>" />
+                                                <label class="form-label" for="email">Email</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="phone_number">Nomor Telepon</label></td>
+                                        <td>
+                                            <div class="form-outline" data-mdb-input-init>
+                                                <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
+                                                    id="editPhoneNumber" onclick="setPhoneNumber();"></i>
+                                                <input type="text" id="phone_number" name="phone_number"
+                                                    class="form-control form-icon-trailing" disabled
+                                                    value="<?= $user->phone_number; ?>" />
+                                                <label class="form-label" for="phone_number">Phone Number</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <button type="submit" class="btn btn-primary btn-rounded btn-sm mt-2">
+                                                <i class="fas fa-save me-2"></i>Save Changes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+
 
 
                                 <div class="modal fade" id="confirmChangeModal" tabindex="-1"

@@ -80,7 +80,7 @@
                                             <a class="dropdown-item" href="profile.php">My profile</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Settings</a>
+                                            <a class="dropdown-item" href="#">Pesanan Saya</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="logout.php">Logout</a>

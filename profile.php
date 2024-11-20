@@ -46,13 +46,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <div class="col-sm-8 col-md-8 mt-5">
                         <div class="card text-start ">
                             <h3 class="card-title px-4 mx-3 my-4 fw-bold ">Profile</h3>
-                            <div class="card-body d-flex">
-                                <table class="table table-responsive table-borderless align-content-start ">
+                            <div class="card-body d-flex col-md-7">
+                                <table class="table table-responsive  table-borderless align-content-start ">
                                     <tr>
                                         <td><label for="name">Name</label></td>
                                         <td>
                                             <div class="form-outline" data-mdb-input-init>
-                                                <input type="text" class="form-control" id="name" name="name"
+                                                <input type="text" class="form-control" id="name"
                                                     value="<?= $user->name; ?>">
                                                 <label for="name" class="form-label">Name</label>
                                             </div>
@@ -64,9 +64,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                             <div class="form-outline" data-mdb-input-init>
                                                 <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
                                                     id="editEmail" onclick="setEmail();"></i>
-                                                <input type="text" id="email" name="email"
-                                                    class="form-control form-icon-trailing" disabled
-                                                    value="<?= $user->email; ?>" />
+                                                <input type="text" id="email" class="form-control form-icon-trailing"
+                                                    disabled value="<?= $user->email; ?>" />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </td>
@@ -86,30 +85,27 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-rounded btn-sm mt-2">
-                                                <i class="fas fa-save me-2"></i>Save Changes
+                                            <button type="buttton" onclick="handleNameChange()"
+                                                class="btn btn-primary btn-rounded  mt-2">
+                                                <i class="fas fa-save me-2 saved-text"></i>Save Changes
+                                                <span class="spinner-border spinner-border-sm me-2 d-none" role="status"
+                                                    aria-hidden="true"> </span>
                                             </button>
                                         </td>
                                     </tr>
                                 </table>
-
-
-
-
-
+    
                                 <div class="modal fade" id="confirmChangeModal" tabindex="-1"
                                     aria-labelledby="confirmChangeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="confirmChangeModalLabel">
-                                                    <!-- Confirm Email Change -->
                                                 </h5>
                                                 <button type="button" class="btn-close" data-mdb-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body" id="confirmChangeModalBody">
-                                                <!-- Are you sure you want to change your email address? -->
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"

@@ -112,8 +112,7 @@ if (isset($_GET['category'])) {
                   foreach ($results as $result) {
                     $selected = (isset($category) && $category == $result->title) ? 'selected' : '';
                     echo "<option value=\"" . htmlspecialchars($result->title) . "\" $selected>" . htmlspecialchars($result->title) . "</option>";
-                    ?>
-                  <?php } ?>
+                  } ?>
                 </select>
             </form>
           </div>

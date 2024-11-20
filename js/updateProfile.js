@@ -11,13 +11,23 @@ const maskedPhoneNumber =
     '*'.repeat(phoneNumber.value.length - 2) + phoneNumber.value.slice(-2)
 phoneNumber.value = maskedPhoneNumber
 
-const alertUpdateProfile = document.getElementById('alertUpdateProfile')
-let alertMessage = document.getElementById('alertMessages')
-
 document.getElementById('email').value = maskedEmail
 
 const modal = document.getElementById('confirmChangeModal')
 const modalInstance = new mdb.Modal(modal)
+
+const updateMessage = (msg) => {
+    const alertUpdateProfile = document.getElementById('alertUpdateProfile')
+    let alertMessage = document.getElementById('alertMessages')
+    alertMessage.innerText = msg
+    alertUpdateProfile.classList.remove('d-none')
+    alertUpdateProfile.classList.replace('hide', 'show')
+    setTimeout(() => {
+        alertUpdateProfile.classList.replace('show', 'hide')
+        alertUpdateProfile.classList.add('d-none')
+    }, 2000)
+    window.location.reload()
+}
 
 function showConfirmModal(type) {
     const modalTitle = document.getElementById('confirmChangeModalLabel')
@@ -134,16 +144,7 @@ const updateField = (
         .then((response) => response.json())
         .then((data) => {
             if (data['success']) {
-                alertMessage.innerText = `${String(
-                    fieldName
-                )} successfully changed`
-                alertUpdateProfile.classList.remove('d-none')
-                alertUpdateProfile.classList.replace('hide', 'show')
-                setTimeout(() => {
-                    alertUpdateProfile.classList.replace('show', 'hide')
-                    alertUpdateProfile.classList.add('d-none')
-                }, 2000)
-
+                updateMessage(`${String(fieldName)} successfully changed`)
                 formInput.setAttribute('disabled', '')
                 btnEdit.classList.remove('fa-check-circle')
                 btnEdit.classList.add('fa-pen-to-square')
@@ -240,4 +241,38 @@ const setPhoneNumber = () => {
         validatePhone,
         updatePhone
     )
+}
+
+function handleNameChange() {
+    const savedButton = document.querySelector('.saved-text')
+    const spinnerButton = document.querySelector('.spinner-border')
+    const nameInput = document.getElementById('name')
+
+    savedButton.classList.add('d-none')
+    spinnerButton.classList.remove('d-none')
+
+    fetch('./utils/profileHandler.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `action=name_change&name=${encodeURIComponent(nameInput.value)}`,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data['success']) {
+                setTimeout(() => {
+                    spinnerButton.classList.add('d-none')
+                    savedButton.classList.remove('d-none')
+                    updateMessage('Name successfully changed')
+                }, 1000)
+            } else {
+                alert('An error occurred while updating name')
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error)
+            alert('An error occurred while updating name')
+        })
+        .finally(() => {})
 }

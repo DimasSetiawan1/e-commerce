@@ -111,8 +111,8 @@ function getDefaultAddress(int $userId): ?array
 function addAddress(int $userId, array $addressData): bool
 {
     global $db;
-    $query = "INSERT INTO addresses_03 (user_id, label, full_address, city, province, postal_code) 
-              VALUES (:user_id, :label, :full_address, :city, :province, :postal_code)";
+    $query = "INSERT INTO addresses_03 (user_id, name, phone_number, label, full_address, city, province, postal_code) 
+              VALUES (:user_id, :name, :phone_number, :label, :full_address, :city, :province, :postal_code)";
     $stmt = $db->prepare($query);
     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
     $stmt->bindParam(':label', $addressData['label'], PDO::PARAM_STR);
@@ -120,6 +120,10 @@ function addAddress(int $userId, array $addressData): bool
     $stmt->bindParam(':city', $addressData['city'], PDO::PARAM_STR);
     $stmt->bindParam(':province', $addressData['province'], PDO::PARAM_STR);
     $stmt->bindParam(':postal_code', $addressData['postal_code'], PDO::PARAM_STR);
+    $stmt->bindParam(':phone_number', $addressData['phone_number'], PDO::PARAM_INT);
+    $stmt->bindParam(':name', $addressData['name'], PDO::PARAM_STR);
+
+
     return $stmt->execute();
 }
 
@@ -151,6 +155,7 @@ function updateName(int $userId, string $newName): bool
         $stmt->bindParam(':name', $newName);
         $stmt->bindParam(':id', $userId);
         $stmt->execute();
+        $_SESSION['username'] = $newName;
         return true;
     } catch (\Throwable $th) {
         echo $th->getMessage();

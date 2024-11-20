@@ -4,10 +4,7 @@
     <div class="container-fluid px-3">
         <!-- Navbar brand -->
         <a class="navbar-brand fw-bold " href="index.php">
-            <!-- <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="16" alt="MDB Logo"
-                loading="lazy" style="margin-top: -1px;" /> -->
             TrendZ
-
         </a>
 
         <!-- Toggle button -->
@@ -29,10 +26,9 @@
                 </form>
             </ul>
 
-
             <!-- Left links -->
 
-            <?php if (strlen(isset($_SESSION['user_id']) == 0)) { ?>
+            <?php if (!isset($_SESSION['user_id'])) { ?>
                 <a href="login.php">
                     <button data-mdb-ripple-init type="button" class="btn mx-5 btn-link px-3 my-3 me-2">
                         Login
@@ -44,12 +40,11 @@
                     </button>
                 </a>
             <?php } else { ?>
-
                 <ul class="navbar-nav">
                     <div class="container mx-3 me-3">
                         <div class="row">
-                            <div class="col-6 col-sm-6 ">
-                                <ul class="navbar-nav ps-5 pb-2">
+                            <div class="col-4 col-sm-4 text-start ">
+                                <ul class="navbar-nav">
                                     <!-- Badge -->
                                     <li class="nav-item">
                                         <a class="nav-link" href="mycart.php">
@@ -60,31 +55,19 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-6 col-sm-6  ">
+                            <div class="col-6 col-sm-6 text-end ">
                                 <!-- Avatar -->
-                                <li class="nav-item dropdown pe-5 ">
-                                    <!-- <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center" href="#"
-                        id="navbarDropdownMenuLink" role="button" aria-expanded="false">
-                        <img src="#" class="rounded-circle fa fa-users" height="22" alt="Portrait of a Woman"
-                        loading="lazy" />
-                            </a> -->
+                                <li class="nav-item dropdown">
                                     <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center"
                                         href="#" id="navbarDropdownMenuLink" role="button" aria-expanded="false">
                                         <img src="./img/user.svg" class="rounded-circle" style="margin-right: 10px;"
                                             height="25" alt="" loading="lazy" />
                                         <span style="font-style: normal;">Hi, <?= $_SESSION['username'] ?></span>
                                     </a>
-
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                        <li>
-                                            <a class="dropdown-item" href="profile.php">My profile</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Pesanan Saya</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="logout.php">Logout</a>
-                                        </li>
+                                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDropdownMenuLink">
+                                        <li><a class="dropdown-item" href="profile.php">My profile</a></li>
+                                        <li><a class="dropdown-item" href="#">Pesanan Saya</a></li>
+                                        <li><a class="dropdown-item" href="logout.php">Logout</a></li>
                                     </ul>
                                 </li>
                             </div>

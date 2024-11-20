@@ -1,34 +1,54 @@
-const url = "https://api.goapi.io/regional/"
-const apikey = "14e6e7fc-edd1-5fbf-3545-19a5b0fa"
+const url = 'https://ibnux.github.io/data-indonesia/'
 
-let getProvince = (apikey) => fetch(url + "provinsi?api_key=" + apikey, {
-    method: "GET"
-}).then(
-    res => res.json()
-)
-
-getCity = (apikey, id) => fetch(url + "kota/" + "?api_key=" + apikey + "&provinsi_id=" + id, {
-    method: "GET"
-}).then(
-    res => res.json()
-)
-
-
-getProvince(apikey).then(
-    res => {
-        res['data'].forEach(element => {
-            document.querySelector('.province').innerHTML += `<option value="${element['id']}">${element['name']}</option>`
-        });
-    }
-)
-
-document.querySelector('.province').addEventListener('change', (e) => {
-    getCity(apikey, e.target.value).then(
-        res => {
-            document.querySelector('.kota').innerHTML = ""
-            res['data'].forEach(element => {
-                document.querySelector('.kota').innerHTML += `<option value="${element['id']}">${element['name']}</option>`
-            });
-        }
-    )
+$('.choose-provinsi').select2({
+    placeholder: 'Pilih Provinsi',
+    allowClear: true,
+    width: '100%',
+    minimumResultsForSearch: Infinity,
+    ajax: {
+        url: url + 'provinsi' + apikey,
+        dataType: 'json',
+        delay: 250,
+        processResults: function (data) {
+            return {
+                results: data['data'].map(function (item) {
+                    return {
+                        id: Number(item['id']),
+                        text: String(item['name']).toLowerCase(),
+                    }
+                }),
+            }
+        },
+    },
 })
+const getProvinsi = () =>
+    fetch(url + 'provinsi?api_key=' + apikey, {
+        method: 'GET',
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            data['data'].forEach((element) => {
+                $('#provinsi').append(
+                    `<option value="${Number(element['id'])}">${String(
+                        element['name']
+                    ).toLowerCase()}</option>`
+                )
+            })
+        })
+
+const getKota = (id) => {
+    fetch(url + 'kota/' + '?api_key=' + apikey + '&provinsi_id=' + id, {
+        method: 'GET',
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            $('#kota').empty()
+            data['data'].forEach((element) => {
+                $('#kota').append(
+                    `<option value="${Number(element['id'])}">${String(
+                        element['name']
+                    ).toLowerCase()}</option>`
+                )
+            })
+        })
+}

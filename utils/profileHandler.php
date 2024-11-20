@@ -15,11 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($action) {
         case 'add':
             $result = addAddress($userId, [
+                'name' => secure($_POST['name']),
+                'no_phone' => secure("0" . $_POST['nomor_telepon']),
                 'label' => secure($_POST['label']),
-                'full_address' => secure($_POST['full_address']),
-                'city' => secure($_POST['city']),
-                'province' => secure($_POST['province']),
-                'postal_code' => secure($_POST['postal_code'])
+                'full_address' => secure($_POST['alamat_lengkap']) + secure($_POST['detail_alamat']),
+                'city' => secure($_POST['kota']),
+                'province' => secure($_POST['provinsi']),
+                'postal_code' => secure($_POST['kode_pos'])
             ]);
             echo json_encode(['success' => $result]);
             break;

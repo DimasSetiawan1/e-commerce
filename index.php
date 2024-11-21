@@ -13,10 +13,26 @@ if (isset($_SESSION['user_id'])) {
     $query->execute();
     $itemCount = $query->rowCount();
     $_SESSION['itemCount'] = $itemCount;
+
   } catch (\Throwable $th) {
     echo $th->getMessage();
     exit();
   }
+}
+
+if (isset($_GET['status'])) {
+  $status = $_GET['status'];
+  switch ($status) {
+    case 'success':
+      $_SESSION['msg'] = '<div id="msg" class="alert alert-success"><strong>Product Added To Cart</strong></div>';
+      break;
+    case 'error':
+      $_SESSION['msg'] = '<div id="msg" class="alert alert-danger"><strong>Unable To Add</strong></div>';
+      break;
+    default:
+      break;
+  }
+
 }
 
 if (isset($_POST['keyword'])) {
@@ -30,30 +46,28 @@ if (isset($_POST['keyword'])) {
 }
 
 
-$msg = '';
-if (isset($_GET['add'])) {
-  if (isset($_SESSION['user_id'])) {
-    $productid = secure($_GET['add']);
-    $user = $_SESSION['user_id'];
+if (isset($_GET['add']) && isset($_SESSION['user_id'])) {
 
-    try {
-      $sql = "INSERT INTO cart_03 (productid, user, quantity)
+  $productid = secure($_GET['add']);
+  $user = $_SESSION['user_id'];
+
+  try {
+    $sql = "INSERT INTO cart_03 (productid, user, quantity)
         VALUES (:productid, :user, 1)
         ON DUPLICATE KEY UPDATE quantity = quantity + 1";
-      $query = $db->prepare($sql);
-      $query->bindParam(':productid', $productid, PDO::PARAM_STR);
-      $query->bindParam(':user', $user, PDO::PARAM_STR);
-      $query->execute();
-      $msg = '<div id="msg" class="alert alert-success"><strong>Product Added To Cart</strong></div>';
-    } catch (\Throwable $th) {
-      $msg = '<div id="msg" class="alert alert-danger"><strong>Unable To Add</strong></div>';
-      throw $th;
-    }
-  } else {
-    echo "<script type='text/javascript'> document.location = 'login.php'; </script>";
-  }
-}
+    $query = $db->prepare($sql);
+    $query->bindParam(':productid', $productid, PDO::PARAM_STR);
+    $query->bindParam(':user', $user, PDO::PARAM_STR);
+    $query->execute();
+    header("Location: index.php?status=success");
 
+
+  } catch (\Throwable $th) {
+    header("Location: index.php?status=error");
+    throw $th;
+  }
+
+}
 
 if (isset($_GET['category'])) {
   $category = secure($_GET['category']);
@@ -76,11 +90,8 @@ if (isset($_GET['category'])) {
   <link rel="stylesheet" href="./css/mdb.min.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-  <script>
-    if (typeof window.history.pushState == 'function') {
-      window.history.pushState({}, "Hide", '<?php echo $_SERVER['PHP_SELF']; ?>');
-    }
-  </script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -100,7 +111,7 @@ if (isset($_GET['category'])) {
           <!-- card body -->
           <div class="card-body">
             <form action="index.php" id="categoryForm" method="GET">
-              <div id="select-wrapper" class="select-wrapper">
+              <div id="select-wrapper" class="select-wrapper ">
                 <label for="category">Category</label>
                 <select class="select initialized" onchange="setCategory()" id="category" name="category">
                   <option value="">All</option>
@@ -129,7 +140,11 @@ if (isset($_GET['category'])) {
             <?php
             foreach ($search_results as $result) { ?>
               <div class="col-lg-3 col-md-6 mb-4">
-                <div class="msg"><?= $msg; ?></div>
+                <div class="msg"><?php if (isset($_SESSION['msg'])) {
+                  echo $_SESSION['msg'];
+                  unset($_SESSION['msg']);
+                } ?>
+                </div>
 
                 <div class="card h-100 border-0 shadow-lg">
                   <a href="#">
@@ -166,7 +181,11 @@ if (isset($_GET['category'])) {
         <?php } else { ?>
             <div class="container mt-2 my-section">
               <h3 class="text-bold ">Popular Products</h3>
-              <div class="msg"><?= $msg; ?></div>
+              <div class="msg"><?php if (isset($_SESSION['msg'])) {
+                echo $_SESSION['msg'];
+                unset($_SESSION['msg']);
+              } ?>
+              </div>
               <div class="row">
                 <?php
 
@@ -320,6 +339,8 @@ if (isset($_GET['category'])) {
   <script src="./js/popper.min.js"></script>
   <script src="./js/mdb.min.js"></script>
   <script src="./js/mdb.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
   <script type="text/javascript">
     const setCategory = function () {
@@ -327,6 +348,7 @@ if (isset($_GET['category'])) {
     }
 
     $(document).ready(function () {
+
       setTimeout(function () {
         $('#msg').slideUp("slow")
       }, 2000);

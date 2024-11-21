@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+<div class="modal fade" id="addressModal" data-focus="false" aria-labelledby="addressModalLabel" aria-hidden="true">
     <div class="modal-dialog mx-0 mx-sm-auto">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -7,33 +7,28 @@
                 <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn-close text-white"
                     data-mdb-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form class="px-4" id="addressForm" action="../utils/profileHandler.php" method="POST">
+
+            <form class="px-4" id="addressForm" action="./utils/profileHandler.php" method="POST">
                 <div class="modal-body">
                     <input type="hidden" value="add" name="action" />
                     <div class="form-outline mb-4">
                         <input type="text" id="nama_lengkap" name="nama" class="form-control" required />
                         <label class="form-label" for="nama_lengkap">Nama Lengkap</label>
                     </div>
-
                     <div class="input-group mb-3">
                         <div class="input-group-text" id="phoneNumber">+62</div>
                         <input type="number" class="form-control" name="nomor_telepon" placeholder="Nomor Telepon"
                             aria-label="Input group example" aria-describedby="btnGroupAddon" required />
                     </div>
 
-                    <div class="select-wrapper mb-3">
+                    <div class="h-100 mb-3">
                         <label for="provinsi">Provinsi</label>
-                        <select data-placeholder="Pilih Provinsi" class="choose-provinsi" onchange="getKota(this.value)"
-                            id="provinsi" name="provinsi" required>
-                            <option value="">Pilih Provinsi</option>
-                            <option value="">Pilih Provinsi</option>
-                            <option value="">Pilih Provinsi</option>
+                        <select class="form-control" id="provinsi" name="provinsi" required>
                         </select>
                     </div>
-                    <div id="select-wrapper" class="select-wrapper mb-4">
+                    <div class="h-100 mb-4">
                         <label for="Kota">Kota</label>
-                        <select class="select initialized" placeholder="Pilih Provinsi" id="kota" name="kota" required>
-                            <option value="">Select Kota</option>
+                        <select class="form-control" id="kota" name="kota" required>
                         </select>
                     </div>
 

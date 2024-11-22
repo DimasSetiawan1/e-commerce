@@ -16,9 +16,10 @@
                         <label class="form-label" for="nama_lengkap">Nama Lengkap</label>
                     </div>
                     <div class="input-group mb-3">
-                        <div class="input-group-text" id="phoneNumber">+62</div>
-                        <input type="number" class="form-control" name="nomor_telepon" placeholder="Nomor Telepon"
-                            aria-label="Input group example" aria-describedby="btnGroupAddon" required />
+                        <div class="input-group-text">+62</div>
+                        <input type="number" id="phoneNumber" class="form-control" name="nomor_telepon"
+                            placeholder="Nomor Telepon" aria-label="Input group example"
+                            aria-describedby="btnGroupAddon" required />
                     </div>
 
                     <div class="h-100 mb-3">
@@ -33,7 +34,7 @@
                     </div>
 
                     <div class="form-outline mb-4">
-                        <input type="number" id="kode_pos" name="kode_pos" class="form-control" required />
+                        <input type="text" id="kode_pos" name="kode_pos" class="form-control" required />
                         <label class="form-label" for="kode_pos">Kode Pos</label>
                     </div>
 
@@ -67,7 +68,8 @@
                         data-mdb-dismiss="modal">
                         Close
                     </button>
-                    <button type="submit" name="submit" data-mdb-button-init class="btn btn-primary">Save
+                    <button type="button" name="submit" onclick="createAddress()" data-mdb-button-init
+                        class="btn btn-primary">Save
                         Address</button>
                 </div>
             </form>

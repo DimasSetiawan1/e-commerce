@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL);
 include('config.php');
 
-$msg = '';
+
 
 if (isset($_GET['add'])) {
   if (isset($_SESSION['user_id'])) {
@@ -17,13 +17,16 @@ if (isset($_GET['add'])) {
       $query->bindParam(':productid', $productid, PDO::PARAM_STR);
       $query->bindParam(':user', $user, PDO::PARAM_STR);
       $query->execute();
-      $msg = '<div id="msg" class="alert alert-success"><strong>Product Added To Cart</strong></div>';
+      header("Location: women.php?status=success");
+
     } catch (\Throwable $th) {
-      $msg = '<div id="msg" class="alert alert-danger"><strong>Unable To Add</strong></div>';
+      header("Location: women.php?status=error");
+
       throw $th;
     }
   } else {
-    $msg = '<div id="msg" class="alert alert-danger"><strong>Please Login</strong></div>';
+    header("Location: women.php?status=error");
+
   }
 } else {
 }
@@ -32,6 +35,20 @@ $sql = "SELECT * from products_03 WHERE category = 'Women'";
 $query = $db->prepare($sql);
 $query->execute();
 $results = $query->fetchAll(PDO::FETCH_OBJ);
+if (isset($_GET['status'])) {
+  $status = $_GET['status'];
+  switch ($status) {
+    case 'success':
+      $_SESSION['msg'] = '<div id="msg" class="alert alert-success"><strong>Product Added To Cart</strong></div>';
+      break;
+    case 'error':
+      $_SESSION['msg'] = '<div id="msg" class="alert alert-danger"><strong>Unable To Add</strong></div>';
+      break;
+    default:
+      break;
+  }
+
+}
 
 ?>
 
@@ -60,7 +77,11 @@ $results = $query->fetchAll(PDO::FETCH_OBJ);
 
     <div class="container mt-5 my-section">
       <h3 class="py-4">Women</h3>
-      <div class="msg"><?= $msg; ?></div>
+      <div class="msg"><?php if (isset($_SESSION['msg'])) {
+        echo $_SESSION['msg'];
+        unset($_SESSION['msg']);
+      } ?>
+      </div>
       <div class="row">
 
         <?php

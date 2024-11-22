@@ -228,7 +228,14 @@ if (isset($_GET['category'])) {
               </div>
             </div>
             <div class="container mt-5 my-section">
-              <h3 class="py-4">Mens</h3>
+              <div class="row">
+                <div class="col-6 col-md-6 col-sm-6 ">
+                  <h3 class="py-4 text-start">Mens</h3>
+                </div>
+                <div class="col-6 col-md-6 col-sm-6 justify-content-center align-content-center text-end">
+                  <a href="mens.php" class="h4 text-end btn-link ">More...</a>
+                </div>
+              </div>
               <div class="row">
 
                 <?php
@@ -273,12 +280,11 @@ if (isset($_GET['category'])) {
 
             <div class="container mt-5 my-section">
               <div class="row">
-                <div class="col-6">
+                <div class="col-6 col-md-6 col-sm-6 ">
                   <h3 class="py-4 text-start">Womens</h3>
                 </div>
-                <div class="col-6">
-
-                  <h5 class="py-4 text-end btn-link">More...</h5>
+                <div class="col-6 col-md-6 col-sm-6 justify-content-center align-content-center text-end">
+                  <a href="women.php" class="h4 text-end btn-link ">More...</a>
                 </div>
               </div>
 
@@ -288,6 +294,58 @@ if (isset($_GET['category'])) {
 
                 // FECTH PRODUCTS
                 $sql = "SELECT * from products_03 WHERE category='Women' ORDER BY RAND() LIMIT 4";
+                $query = $db->prepare($sql);
+                $query->execute();
+                $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                if ($query->rowCount() > 0) {
+                  foreach ($results as $result) { ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                      <div class="card h-100 border-0 shadow-lg">
+                        <a href="#">
+                          <div class="bg-image hover-overlay hover-zoom ripple rounded">
+                            <img class="card-img-top" src="./img/products/<?php echo $result->img; ?>"
+                              alt="<?php echo $result->title; ?>" title="<?php echo $result->title; ?>">
+                          </div>
+                        </a>
+                        <div class="card-body">
+                          <h4 class="card-title">
+                            <a href="#"><?php echo $result->title; ?></a>
+                          </h4>
+                          <h5>
+                          <?= $result->stock > 0 ? $formatter->formatCurrency($result->price, "IDR") : 'Out Of Stock'; ?>
+                          </h5>
+                          <?php
+                          if ($result->stock > 0) {
+                            echo '<a href="index.php?add=' . $result->id . '" class="btn btn-dark mt-2">Add To Cart</a>';
+                          } else {
+                            echo '<a href="index.php?add=' . $result->id . '" class="btn btn-dark mt-2 disabled"><del>Add To Cart</del></a>';
+                          }
+                          ?>
+                        </div>
+                      </div>
+                    </div>
+                <?php }
+                } ?>
+
+              </div>
+            </div>
+            <div class="container mt-5 my-section">
+              <div class="row">
+                <div class="col-6 col-md-6 col-sm-6 ">
+                  <h3 class="py-4 text-start">Kids</h3>
+                </div>
+                <div class="col-6 col-md-6 col-sm-6 justify-content-center align-content-center text-end">
+                  <a href="kids.php" class="h4 text-end btn-link ">More...</a>
+                </div>
+              </div>
+
+              <div class="row">
+
+                <?php
+
+                // FECTH PRODUCTS
+                $sql = "SELECT * from products_03 WHERE category='Kids' ORDER BY RAND() LIMIT 4";
                 $query = $db->prepare($sql);
                 $query->execute();
                 $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -340,20 +398,29 @@ if (isset($_GET['category'])) {
   <script src="./js/mdb.min.js"></script>
   <script src="./js/mdb.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+  <script src="./js/alertController.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="text/javascript">
     const setCategory = function () {
       document.getElementById('categoryForm').submit();
     }
 
-    $(document).ready(function () {
 
-      setTimeout(function () {
-        $('#msg').slideUp("slow")
-      }, 2000);
-    });
   </script>
+  <?php
+  if (isset($_SESSION['flash_message'])) {
+    $flashMessage = $_SESSION['flash_message'];
+    unset($_SESSION['flash_message']);
+    ?>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        customAlert('<?= $flashMessage['type']; ?>', '<?= $flashMessage['title']; ?>', '<?php echo $flashMessage['message']; ?>');
+      });
+    </script>
+    <?php
+  }
+  ?>
 </body>
 
 </html>

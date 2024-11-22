@@ -49,12 +49,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             <div class="card-body d-flex col-md-7">
                                 <table class="table table-responsive  table-borderless align-content-start ">
                                     <tr>
-                                        <td><label for="name">Name</label></td>
+                                        <td><label for="name">Nama</label></td>
                                         <td>
                                             <div class="form-outline" data-mdb-input-init>
                                                 <input type="text" class="form-control" id="name"
                                                     value="<?= $user->name; ?>">
-                                                <label for="name" class="form-label">Name</label>
+                                                <label for="name" class="form-label">Nama</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -63,9 +63,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         <td>
                                             <div class="form-outline" data-mdb-input-init>
                                                 <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
-                                                    id="editEmail" onclick="setEmail();"></i>
-                                                <input type="text" id="email" class="form-control form-icon-trailing"
-                                                    disabled value="<?= $user->email; ?>" />
+                                                    id="editEmail"></i>
+                                                <input type="text" id="email" data-original-email="<?= $user->email; ?>"
+                                                    class="form-control form-icon-trailing" disabled
+                                                    value="<?= $user->email; ?>" />
                                                 <label class="form-label" for="email">Email</label>
                                             </div>
                                         </td>
@@ -75,11 +76,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         <td>
                                             <div class="form-outline" data-mdb-input-init>
                                                 <i class="btn btn-link fa-1x far fa-pen-to-square trailing fa-fw pe-auto"
-                                                    id="editPhoneNumber" onclick="setPhoneNumber();"></i>
+                                                    id="editPhoneNumber"></i>
                                                 <input type="text" id="phone_number" name="phone_number"
+                                                    data-original-phone-number="<?= $user->phone_number; ?>"
                                                     class="form-control form-icon-trailing" disabled
                                                     value="<?= $user->phone_number; ?>" />
-                                                <label class="form-label" for="phone_number">Phone Number</label>
+                                                <label class="form-label" for="phone_number">Nomor Telepon</label>
                                             </div>
                                         </td>
                                     </tr>
@@ -94,8 +96,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                         </td>
                                     </tr>
                                 </table>
-    
-                                <div class="modal fade" id="confirmChangeModal" tabindex="-1"
+
+                                <!-- <div class="modal fade" id="confirmChangeModal" tabindex="-1"
                                     aria-labelledby="confirmChangeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -124,9 +126,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                 <span id="alertMessages"></span>
                                 <button type="button" class="btn-close ms-2" data-mdb-dismiss="alert"
                                     aria-label="Close"></button>
+                            </div> -->
                             </div>
                         </div>
-                    </div>
 
         </section>
     </main>
@@ -140,6 +142,33 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
     <script src="./js/updateProfile.js"></script>
+    <script src="./js/alertController.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editPhoneNumberBtn = document.getElementById('editPhoneNumber');
+            const email = document.getElementById('email').value
+            const editEmailBtn = document.getElementById('editEmail')
+            const [nick, provider] = email.split('@')
+            const maskedNick = nick.slice(0, 2) + '*'.repeat(Math.max(0, nick.length - 2))
+            const maskedEmail = `${maskedNick}@${provider}`
+
+            const phoneNumber = document.getElementById('phone_number')
+            const maskedPhoneNumber =
+                '*'.repeat(phoneNumber.value.length - 2) + phoneNumber.value.slice(-2)
+            phoneNumber.value = maskedPhoneNumber
+
+            document.getElementById('email').value = maskedEmail
+            if (editEmailBtn) {
+                editEmailBtn.addEventListener('click', setEmail);
+            }
+
+            if (editPhoneNumberBtn) {
+                editPhoneNumberBtn.addEventListener('click', setPhoneNumber);
+            }
+        });
+
+    </script>
 
 </body>
 

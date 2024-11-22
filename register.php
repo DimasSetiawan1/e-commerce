@@ -9,7 +9,6 @@ if (isset($_POST['submit'])) {
     $email = secure($_POST['email']);
 
     if (strlen($email) == 0 && strlen($mobile) == 0 && strlen($name) == 0) {
-
         echo "<script>alert('Please Fill All Valid Details')</script>";
         exit();
     }

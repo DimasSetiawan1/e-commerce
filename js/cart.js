@@ -1,3 +1,5 @@
+let isDiscount = false
+
 function currencyFormat(
     number,
     currency = 'IDR',
@@ -11,20 +13,44 @@ function currencyFormat(
         maximumFractionDigits: decimals,
     }).format(number)
 }
-function updateTotal() {
-    const totalPrice = document.querySelectorAll('.total')
-    let subtotal = 0
-    totalPrice.forEach((element) => {
-        subtotal =
-            subtotal + parseInt(element.textContent.replace(/[^0-9]/g, ''))
-    })
 
-    // document.getElementById("subtotal").textContent = currencyFormat(subtotal)
-    // let discount = parseInt(document.querySelector('.discount').textContent.replace('%', ''))
-    // let total =  discount != 0 ? subtotal * (discount/100) : subtotal
-    // document.getElementById("total").textContent = currencyFormat(total)
+document.addEventListener('DOMContentLoaded', function () {
+    updateTotal({
+        isDiscount: isDiscount,
+    })
+})
+
+/**
+ *
+ * @param {string} isDiscount // Optional. Default is false
+ * @param {number} discountPercentage // Optional. Default is 0
+ */
+function updateTotal({ isDiscount = false, discountPercentage = 0 }) {
+    let subtotal = 0
+    document.querySelectorAll('[data-price]').forEach((item) => {
+        const price = parseFloat(
+            item.getAttribute('data-price').replace(/[^0-9.-]+/g, '')
+        )
+        const quantity = parseInt(
+            item.closest('.row').querySelector('[id^="quantity-"]').value
+        )
+        subtotal += price * quantity
+    })
+    document.getElementById('subtotal').textContent = currencyFormat(subtotal)
+    document.getElementById('total').textContent = currencyFormat(subtotal)
+
+    if (isDiscount) {
+        const discountedTotal = subtotal - subtotal * (discountPercentage / 100)
+        document.getElementById('total').textContent =
+            currencyFormat(discountedTotal)
+        document.getElementById('totalDiscount').textContent = currencyFormat(
+            subtotal * (discountPercentage / 100)
+        )
+        document.getElementById(
+            'discountPercentage'
+        ).textContent = `Discount ${discountPercentage}%`
+    }
 }
-updateTotal()
 
 document.querySelectorAll('.add, .minus').forEach((button) => {
     button.addEventListener('click', function () {
@@ -36,7 +62,6 @@ document.querySelectorAll('.add, .minus').forEach((button) => {
         let price = parseInt(
             total.getAttribute('data-price').replace(/[^0-9]/g, '')
         )
-        // const isAddAction = this.classList.contains('add');
 
         const xhr = new XMLHttpRequest()
         xhr.open('POST', './utils/update_cart.php', true)
@@ -50,17 +75,13 @@ document.querySelectorAll('.add, .minus').forEach((button) => {
                 document.getElementById(`quantity-${itemId}`).value =
                     data['quantity']
                 total.textContent = currencyFormat(data['total'])
-                updateTotal()
+                updateTotal({})
             }
         }
 
-        xhr.send(
-            `action=updateCart&id=${itemId}&qty=${quantity}&price=${price}`
-        )
-        console.log(itemId, quantity, price)
+        xhr.send(`action=updateCart&id=${itemId}&qty=${quantity}`)
     })
 })
-let isDiscount = false
 
 function applyDiscount(value) {
     if (isDiscount) return
@@ -75,8 +96,6 @@ function applyDiscount(value) {
                 console.log(xhr.responseText)
                 let response = JSON.parse(xhr.responseText)
                 const data = response['data']
-
-                updateTotal()
                 document.querySelector('.text-notification').textContent =
                     'Voucher discount applied!'
                 $('#alert').removeClass('alert-danger')
@@ -85,6 +104,10 @@ function applyDiscount(value) {
                 setTimeout(function () {
                     $('#alert').addClass('d-none')
                 }, 5000)
+                updateTotal({
+                    isDiscount: true,
+                    discountPercentage: data['discount'],
+                })
                 isDiscount = true
             } catch (error) {
                 console.log(error)
@@ -124,7 +147,7 @@ function removeCart(id) {
                 }, 2000)
 
                 alertElement.remove()
-                updateTotal()
+                updateTotal({})
             }
         }
     }

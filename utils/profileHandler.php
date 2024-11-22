@@ -15,10 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($action) {
         case 'add':
             $result = addAddress($userId, [
-                'name' => secure($_POST['name']),
-                'no_phone' => secure("0" . $_POST['nomor_telepon']),
+                'name' => secure($_POST['nama']),
+                'phone_number' => secure($_POST['nomor_telepon']),
                 'label' => secure($_POST['label']),
-                'full_address' => secure($_POST['alamat_lengkap']) + secure($_POST['detail_alamat']),
+                'full_address' => secure($_POST['alamat_lengkap']) . secure($_POST['detail_alamat']),
                 'city' => secure($_POST['kota']),
                 'province' => secure($_POST['provinsi']),
                 'postal_code' => secure($_POST['kode_pos'])
@@ -29,18 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'update':
             $addressId = secure($_POST['address_id']) ?? 0;
             $result = updateAddress($addressId, [
+                'name' => secure($_POST['nama']),
+                'phone_number' => secure("0" . $_POST['nomor_telepon']),
                 'label' => secure($_POST['label']),
-                'full_address' => secure($_POST['full_address']),
-                'city' => secure($_POST['city']),
-                'province' => secure($_POST['province']),
-                'postal_code' => secure($_POST['postal_code'])
+                'full_address' => secure($_POST['alamat_lengkap']) + secure($_POST['detail_alamat']),
+                'city' => secure($_POST['kota']),
+                'province' => secure($_POST['provinsi']),
+                'postal_code' => secure($_POST['kode_pos'])
             ]);
-            echo json_encode(['success' => $result]);
-            break;
-
-        case 'delete':
-            $addressId = secure($_POST['address_id']) ?? 0;
-            $result = deleteAddress($addressId);
             echo json_encode(['success' => $result]);
             break;
 
@@ -58,14 +54,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = updatePhoneNumber($userId, $_POST['phone']);
             echo json_encode(['success' => $result]);
             break;
-        case 'name_change':
+        case 'change_name':
             $result = updateName($userId, $_POST['name']);
             echo json_encode(['success' => $result]);
+            break;
+        case 'change_password':
+            try {
+                $result = updatePassword($userId, $_POST['password'], $_POST['new_password']);
+                echo json_encode(['success' => true, 'message' => $result]);
+            } catch (\Throwable $th) {
+                echo json_encode(['success' => false, 'message' => 'Password update failed']);
+                exit;
+            }
             break;
         default:
             echo json_encode(['success' => false, 'message' => 'Invalid action']);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $addresses = getAddresses($userId);
+    if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid or missing user ID']);
+        exit;
+    }
+    $addresses = getAddresses($_GET['id'], $_SESSION['user_id'] ?? 0);
     echo json_encode(['success' => true, 'addresses' => $addresses]);
 }

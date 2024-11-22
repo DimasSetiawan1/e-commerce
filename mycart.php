@@ -3,7 +3,6 @@ session_start();
 error_reporting(E_ALL);
 include('config.php');
 
-$discount = 0;
 
 if (isset($_SESSION['user_id'])) {
     $user = $_SESSION['user_id'];
@@ -148,7 +147,7 @@ if (isset($_SESSION['user_id'])) {
                                                                             <div data-mdb-input-init class="form-outline w-25">
                                                                                 <input min="1" id="quantity-<?= $result->id ?>"
                                                                                     value="<?= $qty ?>" type="number" disabled
-                                                                                    class="form-control bg-dark quantity" />
+                                                                                    class="form-control text-center text-bg-dark quantity " />
 
                                                                             </div>
 
@@ -194,18 +193,9 @@ if (isset($_SESSION['user_id'])) {
                                                     <h5 class="text-uppercase">items
                                                         <?= $itemCount ?? "" ?>
                                                     </h5>
-                                                    <h5>subtotal</h5>
-                                                </div>
+                                                    <h5 id="subtotal">
 
-                                                <h5 class="text-uppercase mb-3">Shipping</h5>
-
-                                                <div class="mb-4 pb-2">
-                                                    <select data-mdb-select-init class="select ">
-                                                        <option value="1">Standard-Delivery- €5.00</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                        <option value="4">Four</option>
-                                                    </select>
+                                                    </h5>
                                                 </div>
 
 
@@ -226,13 +216,18 @@ if (isset($_SESSION['user_id'])) {
 
                                                 <hr class="my-4">
 
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span id="discountPercentage"> </span>
+                                                    <span id="totalDiscount"> </span>
+
+                                                </div>
                                                 <div class="d-flex justify-content-between mb-5">
                                                     <h5 class="text-uppercase">Total price</h5>
-                                                    <h5></h5>
+                                                    <h5 id="total"></h5>
                                                 </div>
 
                                                 <button type="button"
-                                                    class="btn btn-dark btn-block btn-lg">Register</button>
+                                                    class="btn btn-dark btn-block btn-lg">Checkout</button>
 
                                             </div>
                                         </div>

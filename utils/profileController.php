@@ -38,13 +38,43 @@ function updatePhoneNumber(int $userId, int $phoneNumber): bool
 
 }
 
-function getAddresses(int $id): array
+function updatePassword(int $userId, string $password, string $newPassword): string
+{
+    global $db;
+    try {
+        $password = secure($password);
+        $newPassword = secure($newPassword);
+
+        // pengecekan dulu
+        $checkPasswordQuery = "SELECT password FROM users_03 WHERE id = :id";
+        $checkPasswordStmt = $db->prepare($checkPasswordQuery);
+        $checkPasswordStmt->bindParam(':id', $userId);
+        $checkPasswordStmt->execute();
+        $checkPassword = $checkPasswordStmt->fetch(PDO::FETCH_ASSOC);
+        if (!password_verify($password, $checkPassword['password'])) {
+            return 'Password Salah';
+        }
+
+        $query = "UPDATE users_03 SET password = :password WHERE id = :id";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':password', $newPassword);
+        $stmt->bindParam(':id', $userId);
+        $stmt->execute();
+        return 'Password berhasil diubah';
+    } catch (\Throwable $th) {
+        return 'Error: ' . $th->getMessage();
+
+    }
+}
+
+function getAddresses(int $id, int $userId): array
 {
     global $db;
     $id = secure($id);
-    $query = "SELECT * FROM addresses_03 WHERE id = :id";
+    $query = "SELECT * FROM addresses_03 WHERE id = :id AND user_id = :userId";
     $stmt = $db->prepare($query);
     $stmt->bindparam(':id', $id);
+    $stmt->bindparam(':userId', $userId);
     $stmt->execute();
     $addresses = $stmt->fetchAll(PDO::FETCH_OBJ);
     return $addresses;

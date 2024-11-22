@@ -43,7 +43,7 @@
                 <ul class="navbar-nav">
                     <div class="container mx-3 me-3">
                         <div class="row">
-                            <div class="col-4 col-sm-4 text-start ">
+                            <div class="col-md-5 col-sm-5 text-start ">
                                 <ul class="navbar-nav">
                                     <!-- Badge -->
                                     <li class="nav-item">
@@ -55,7 +55,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="col-6 col-sm-6 text-end ">
+                            <div class="col-md-7 col-sm-7 text-end ">
                                 <!-- Avatar -->
                                 <li class="nav-item dropdown">
                                     <a data-mdb-dropdown-init class="nav-link dropdown-toggle d-flex align-items-center"

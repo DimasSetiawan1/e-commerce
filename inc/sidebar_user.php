@@ -1,14 +1,14 @@
 <div class="col-sm-4 col-md-4 mt-5 ">
     <div class="card">
 
-        <div class="card-body align-items-center mx-auto">
-            <img src="./img/user.png" alt="test" class="rounded-circle " height="100px" width="100px" loading="lazy" />
+        <div class="card-body mx-auto text-center">
+            <img src="./img/user.png" alt="test" class="rounded-circle" height="100px" width="100px" loading="lazy" />
 
-            <h5 class="mt-3 text-center align-items-center fw-bold ">
+            <h5 class="mt-3 fw-bold">
                 <?= $_SESSION['username']; ?>
             </h5>
-
         </div>
+
         <div class="card-body">
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">

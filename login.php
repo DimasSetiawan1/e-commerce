@@ -4,7 +4,7 @@ error_reporting(0);
 include('config.php');
 
 if (isset($_SESSION['user_id'])) {
-    echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+    header('Location: index.php');
 }
 
 if (isset($_POST['submit'])) {
@@ -20,17 +20,32 @@ if (isset($_POST['submit'])) {
         if (password_verify(trim($password), $hashed_password)) {
             $_SESSION['user_id'] = $results->id;
             $_SESSION['username'] = $results->name;
-            echo "<script>alert('Login Success, Continue Your Shopping')</script>";
-            echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+            $_SESSION['flash_message'] = [
+                'type' => 'success',
+                'title' => 'Login Berhasil',
+                'message' => 'Selamat datang kembali!'
+            ];
+            session_write_close();
+            header('Location: index.php');
             exit();
         } else {
-            echo "<script>alert('Password Incorrect');</script>";
-            echo "<script type='text/javascript'> document.location = 'login.php'; </script>";
+            $_SESSION['flash_message'] = [
+                'type' => 'error',
+                'title' => 'Login Gagal',
+                'message' => 'Password salah!'
+            ];
+            header('Location: login.php');
             exit();
         }
 
     } else {
-        echo "<script>alert('Email Incorrect');</script>";
+        $_SESSION['flash_message'] = [
+            'type' => 'error',
+            'title' => 'Login Gagal',
+            'message' => 'Email salah!'
+        ];
+        header('Location: login.php');
+
         exit();
     }
 }
@@ -111,6 +126,23 @@ if (isset($_POST['submit'])) {
     <script src="./js/popper.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
+    <script src="./js/alertController.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <?php
+    if (isset($_SESSION['flash_message'])) {
+        $flashMessage = $_SESSION['flash_message'];
+        unset($_SESSION['flash_message']);
+        ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                customAlert('<?= $flashMessage['type']; ?>', '<?= $flashMessage['title']; ?>', '<?php echo $flashMessage['message']; ?>');
+            });
+        </script>
+        <?php
+    }
+    ?>
+
 
 
 </body>

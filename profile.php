@@ -97,36 +97,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                                     </tr>
                                 </table>
 
-                                <!-- <div class="modal fade" id="confirmChangeModal" tabindex="-1"
-                                    aria-labelledby="confirmChangeModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="confirmChangeModalLabel">
-                                                </h5>
-                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body" id="confirmChangeModalBody">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-mdb-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-primary"
-                                                    id="confirmChange">Confirm</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="alert alert-success d-none  alert-dismissible fade hide top-1 position-fixed start-0 m-3"
-                                id="alertUpdateProfile" role="alert" data-mdb-color="success">
-                                <i class="fas fa-check me-2"></i>
-                                <span id="alertMessages"></span>
-                                <button type="button" class="btn-close ms-2" data-mdb-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div> -->
                             </div>
                         </div>
 

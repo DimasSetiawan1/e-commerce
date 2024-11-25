@@ -64,11 +64,7 @@ if (isset($_GET['status'])) {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
-  <script>
-    if (typeof window.history.pushState == 'function') {
-      window.history.pushState({}, "Hide", '<?php echo $_SERVER['PHP_SELF']; ?>');
-    }
-  </script>
+
 </head>
 
 <body>

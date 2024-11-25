@@ -1,8 +1,9 @@
 /**
- * Sets up form field editing functionality.
- * @param {string} status - The status of the alert ('error', 'success', or 'warning')
- * @param {string} title - The title of the alert
- * @param {string} message - The message content of the alert
+ * Displays a custom alert using SweetAlert2.
+ * @param {object} options - An object containing the options for the alert
+ * @param {string} options.status - The status of the alert ('error', 'success', or 'warning')
+ * @param {string} options.title - The title of the alert
+ * @param {string} options.message - The message content of the alert
  */
 
 const customAlert = ({ status, title, message }) => {

@@ -1,5 +1,3 @@
-let isDiscount = false
-
 function currencyFormat(
     number,
     currency = 'IDR',
@@ -15,42 +13,71 @@ function currencyFormat(
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    updateTotal({
-        isDiscount: isDiscount,
-    })
+    updateTotal({})
 })
 
-/**
- *
- * @param {string} isDiscount // Optional. Default is false
- * @param {number} discountPercentage // Optional. Default is 0
- */
-function updateTotal({ isDiscount = false, discountPercentage = 0 }) {
+function updateTotal({}) {
     let subtotal = 0
-    document.querySelectorAll('[data-price]').forEach((item) => {
-        const price = parseFloat(
-            item.getAttribute('data-price').replace(/[^0-9.-]+/g, '')
-        )
-        const quantity = parseInt(
-            item.closest('.row').querySelector('[id^="quantity-"]').value
-        )
-        subtotal += price * quantity
-    })
-    document.getElementById('subtotal').textContent = currencyFormat(subtotal)
-    document.getElementById('total').textContent = currencyFormat(subtotal)
+    const priceElements = document.querySelectorAll('[data-price]')
 
-    if (isDiscount) {
-        const discountedTotal = subtotal - subtotal * (discountPercentage / 100)
-        document.getElementById('total').textContent =
-            currencyFormat(discountedTotal)
-        document.getElementById('totalDiscount').textContent = currencyFormat(
-            subtotal * (discountPercentage / 100)
-        )
-        document.getElementById(
-            'discountPercentage'
-        ).textContent = `Discount ${discountPercentage}%`
+    for (const item of priceElements) {
+        try {
+            const price =
+                parseFloat(
+                    item.getAttribute('data-price').replace(/[^0-9.-]+/g, '')
+                ) || 0
+            const quantityElement = item
+                .closest('.row')
+                ?.querySelector('[id^="quantity-"]')
+            const quantity = parseInt(quantityElement?.value) || 0
+            subtotal += price * quantity
+        } catch (error) {
+            console.error('Error calculating item total:', error)
+        }
+    }
+
+    const subtotalElement = document.getElementById('subtotal')
+    const totalElement = document.getElementById(`total`)
+
+    if (subtotalElement) subtotalElement.textContent = currencyFormat(subtotal)
+    if (totalElement) totalElement.textContent = currencyFormat(subtotal)
+
+    const id = document.querySelectorAll('[data-discount-id]')
+    let totalDiscount = 0
+
+    for (const itemId of id) {
+        const discountElement = itemId.querySelector(`#totalDiscount`)
+        const discountPercentageElement =
+            itemId.querySelector(`#discountPercentage`)
+        const dataDiscount =
+            parseInt(discountElement?.getAttribute('data-discount')) || 0
+        if (discountPercentageElement) {
+            discountPercentageElement.textContent = `Discount ${dataDiscount}%`
+        }
+
+        if (dataDiscount !== 0) {
+            const discountAmount = subtotal * (dataDiscount / 100)
+
+            totalDiscount += discountAmount
+
+            if (discountElement) {
+                discountElement.textContent = `${currencyFormat(
+                    discountAmount
+                )}`
+            }
+        }
+    }
+
+    const discountedTotal = subtotal - totalDiscount
+
+    if (totalElement) {
+        totalElement.textContent = currencyFormat(discountedTotal)
     }
 }
+
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+    window.location.href = './checkout.php'
+})
 
 document.querySelectorAll('.add, .minus').forEach((button) => {
     button.addEventListener('click', function () {
@@ -74,43 +101,57 @@ document.querySelectorAll('.add, .minus').forEach((button) => {
                 let data = JSON.parse(xhr.responseText)['data']
                 document.getElementById(`quantity-${itemId}`).value =
                     data['quantity']
-                total.textContent = currencyFormat(data['total'])
+                total.textContent = currencyFormat(
+                    data['price'] * data['quantity']
+                )
                 updateTotal({})
             }
         }
 
-        xhr.send(`action=updateCart&id=${itemId}&qty=${quantity}`)
+        xhr.send(
+            `action=updateCart&id=${itemId}&qty=${quantity}&price=${price}`
+        )
     })
 })
 
 function applyDiscount(value) {
-    if (isDiscount) return
-    isDiscount = true
-
     const xhr = new XMLHttpRequest()
     xhr.open('POST', './utils/update_cart.php', true)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             try {
-                console.log(xhr.responseText)
                 let response = JSON.parse(xhr.responseText)
-                const data = response['data']
+                if (response['data'] !== undefined) {
+                    const data = response['data']
+                    document.querySelector('.text-notification').textContent =
+                        'Voucher discount applied!'
+                    $('#alert').removeClass('alert-danger')
+                    $('#alert').addClass('alert-success')
+                    $('#alert').removeClass('d-none')
+                    setTimeout(function () {
+                        $('#alert').addClass('d-none')
+                    }, 5000)
+                    location.reload()
+                } else {
+                    document.querySelector(
+                        '.text-notification'
+                    ).textContent = `${response['message']}`
+                    $('#alert').addClass('alert-danger')
+                    $('#alert').removeClass('d-none')
+                    setTimeout(function () {
+                        $('#alert').addClass('d-none')
+                    }, 2000)
+                }
+            } catch (error) {
+                // console.log(error)
                 document.querySelector('.text-notification').textContent =
-                    'Voucher discount applied!'
-                $('#alert').removeClass('alert-danger')
-                $('#alert').addClass('alert-success')
+                    'An error occurred while applying the discount!'
+                $('#alert').addClass('alert-danger')
                 $('#alert').removeClass('d-none')
                 setTimeout(function () {
                     $('#alert').addClass('d-none')
-                }, 5000)
-                updateTotal({
-                    isDiscount: true,
-                    discountPercentage: data['discount'],
-                })
-                isDiscount = true
-            } catch (error) {
-                console.log(error)
+                }, 2000)
             }
         } else {
             document.querySelector('.text-notification').textContent =
@@ -120,7 +161,6 @@ function applyDiscount(value) {
             setTimeout(function () {
                 $('#alert').addClass('d-none')
             }, 2000)
-            isDiscount = false
         }
     }
     xhr.send(`action=getDiscount&voucher=${value}`)
@@ -135,19 +175,11 @@ function removeCart(id) {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             let data = JSON.parse(xhr.responseText)
             if (data['status'] == 'success') {
-                const alertElement =
-                    document.querySelector('statusSuccessModal')
-                const alertMsg = document.querySelector('.msg')
-                setTimeout(() => {
-                    alertMsg.textContent = data['message']
-                    if (alertElement) {
-                        alertElement.classList.remove('fade')
-                        alertElement.classList.add('show')
-                    }
-                }, 2000)
-
-                alertElement.remove()
-                updateTotal({})
+                customAlert({
+                    title: 'Success',
+                    message: 'Barang Berhasil dihapus dari Keranjang!',
+                    status: 'success',
+                })
             }
         }
     }

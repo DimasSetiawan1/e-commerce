@@ -11,6 +11,7 @@ if (isset($_SESSION['user_id'])) {
 
     if (!isset($_POST['action']))
         echo '';
+    $userId = $_SESSION['user_id'];
     switch ($_POST['action'] ?? '') {
         case 'updateCart':
             try {
@@ -18,21 +19,15 @@ if (isset($_SESSION['user_id'])) {
                 $quantity = secure($_POST['qty']);
                 $price = secure($_POST['price']);
 
-                $total = $quantity * $price;
-                $user_id = $_SESSION['user_id'];
 
-                if (!isset($_SESSION['cart'][$user_id]))
-                    $_SESSION['cart'][$user_id] = [];
-
-
-                if (isset($_SESSION['cart'][$user_id][$product_id])) {
-                    $_SESSION['cart'][$user_id][$product_id]['quantity'] = $quantity;
-                    $_SESSION['cart'][$user_id][$product_id]['total'] = $quantity * $price;
+                if (isset($_SESSION['cart'][$product_id])) {
+                    $_SESSION['cart'][$product_id]['quantity'] = $quantity;
+                    $_SESSION['cart'][$product_id]['price'] = $price;
                 } else {
-                    $_SESSION['cart'][$user_id][$product_id] = [
+                    $_SESSION['cart'][$product_id] = [
                         'productid' => $product_id,
                         'quantity' => $quantity,
-                        'total' => $total,
+                        'price' => $price,
                     ];
                 }
 
@@ -40,7 +35,7 @@ if (isset($_SESSION['user_id'])) {
                     'status' => 'success',
                     'data' => [
                         "quantity" => $quantity,
-                        "total" => $total,
+                        "price" => $price,
                     ]
 
                 ]);
@@ -62,10 +57,15 @@ if (isset($_SESSION['user_id'])) {
                 $sql->execute();
                 $result = $sql->fetch(PDO::FETCH_OBJ);
                 if ($sql->rowCount() > 0) {
+                    $_SESSION['discount'][$result->id] = [
+                        'discount_total' => $result->total_discount,
+                        'discount_code' => $result->kode_kupon
+                    ];
+
                     echo json_encode([
                         'status' => 'success',
                         'data' => [
-                            'discount' => $result->total_discount,
+                            'discount_total' => $result->total_discount,
                             'discount_code' => $result->kode_kupon
                         ]
                     ]);
@@ -89,10 +89,12 @@ if (isset($_SESSION['user_id'])) {
         case 'removeCart':
             try {
                 $product_id = secure($_POST['id']);
-                $query = "DELETE FROM cart_03 WHERE id = (:cartid)";
+                $query = "DELETE FROM cart_03 WHERE productid = (:cartid) AND user = (:userid) LIMIT 1";
                 $sql = $db->prepare($query);
-                $sql->bindParam(':cartid', $product_id, PDO::PARAM_STR);
+                $sql->bindParam(':cartid', $product_id, PDO::PARAM_INT);
+                $sql->bindParam(':userid', $userId, PDO::PARAM_INT);
                 $sql->execute();
+                unset($_SESSION['cart'][$product_id]);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Product removed from cart'

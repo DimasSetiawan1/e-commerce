@@ -77,6 +77,7 @@ function getAddresses(int $id, int $userId): array
     $stmt->bindparam(':userId', $userId);
     $stmt->execute();
     $addresses = $stmt->fetchAll(PDO::FETCH_OBJ);
+
     return $addresses;
 }
 

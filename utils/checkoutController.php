@@ -30,3 +30,18 @@ function getAddresses(string $customerId): array
         return [];
     }
 }
+
+function getCouriers(): array
+{
+    global $db;
+    try {
+        $stmt = $db->prepare("SELECT * FROM courier_03");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+
+    } catch (\Throwable $th) {
+        echo $th->getMessage();
+        return [];
+    }
+
+}

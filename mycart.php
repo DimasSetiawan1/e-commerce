@@ -236,20 +236,6 @@ if (isset($_SESSION['user_id'])) {
                                                     <h5 class="text-uppercase">Total price</h5>
                                                     <h5 id="total"></h5>
                                                 </div>
-                                                <?php
-                                                // unset($_SESSION['cart']);
-                                                // var_dump($_SESSION);
-                                                // unset($_SESSION['discount']);
-                                                // foreach ($_SESSION as $key => $value) {
-                                                //     echo "<strong>$key</strong>: ";
-                                                //     if (is_array($value)) {
-                                                //         echo "<pre>" . print_r($value, true) . "</pre>";
-                                                //     } else {
-                                                //         echo "$value<br>";
-                                                //     }
-                                                // }
-                                            
-                                                ?>
                                                 <button type="submit" id="checkoutBtn"
                                                     class="btn btn-dark btn-block btn-lg">Checkout</button>
 

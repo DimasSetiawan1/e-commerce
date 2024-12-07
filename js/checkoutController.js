@@ -12,6 +12,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const shippingCostElement = document.getElementById('shippingCost')
     const totalPaymentElement = document.getElementById('totalPayment')
 
+    const addCoupon = document.querySelector('.add-coupon')
+    console.log(addCoupon.textContent)
+    const submitCoupon = document.querySelector('.submit-coupon')
+
+    addCoupon.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+            handleCouponSubmission()
+        }
+    })
+
+    submitCoupon.addEventListener('click', handleCouponSubmission)
+
+    // async function handleCouponSubmission() {
+    //     const couponCode = addCoupon.textContent
+
+    //     await fetch('./checkout.php', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded',
+    //         },
+    //         body: new URLSearchParams({
+    //             action: 'applyDiscount',
+    //             coupon: couponCode,
+    //         }),
+    //     })
+    //         .then((response) => response)
+    //         .then((data) => {
+    //             if (data) {
+    //                 window.location.reload()
+    //             } else {
+    //                 console.log('Coupon applied:', data)
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error:', error)
+    //         })
+    // }
+
     function updateTotalPayment() {
         // Ambil total harga barang
         const totalPrice = parseFloat(

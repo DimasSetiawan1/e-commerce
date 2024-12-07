@@ -37,9 +37,11 @@
     "editor.tabCompletion": "on",
     "tabnine.codeLensEnabled": true,
     "prettier.trailingComma": "es5",
+    "colorize.languages": ["javascript", "php"],
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+
     "[php]": {
         "editor.autoClosingBrackets": "always",
         "editor.defaultFormatter": "DEVSENSE.phptools-vscode",
@@ -63,5 +65,8 @@
     },
     "[scss]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[sql]": {
+        "editor.defaultFormatter": "cweijan.vscode-postgresql-client2"
     }
 }

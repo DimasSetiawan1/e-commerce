@@ -7,11 +7,11 @@ include('config.php');
 if (isset($_SESSION['user_id'])) {
   try {
     $user = $_SESSION['user_id'];
-    $sql = "SELECT cart_03.id,products_03.title,products_03.price,products_03.img FROM cart_03 INNER JOIN products_03 ON products_03.id = cart_03.productid WHERE cart_03.user=:user";
+    $sql = "SELECT COUNT(*) FROM cart_03 where user_id = :user";
     $query = $db->prepare($sql);
-    $query->bindParam(':user', $user, PDO::PARAM_STR);
+    $query->bindParam(':user', $user, PDO::PARAM_INT);
     $query->execute();
-    $itemCount = $query->rowCount();
+    $itemCount = $query->fetchColumn();
     $_SESSION['itemCount'] = $itemCount;
 
   } catch (\Throwable $th) {
@@ -37,8 +37,7 @@ if (isset($_GET['status'])) {
 
 if (isset($_POST['keyword'])) {
   $keyword = secure($_POST['keyword']);
-  $query = "SELECT * FROM products_03 WHERE title LIKE :keyword";
-  $keyword = "%$keyword%";
+  $query = "SELECT * FROM products_03 WHERE MATCH (title) AGAINST (:keyword IN NATURAL LANGUAGE MODE)";
   $search = $db->prepare($query);
   $search->bindParam(":keyword", $keyword, PDO::PARAM_STR);
   $search->execute();
@@ -52,7 +51,7 @@ if (isset($_GET['add']) && isset($_SESSION['user_id'])) {
   $user = $_SESSION['user_id'];
 
   try {
-    $sql = "INSERT INTO cart_03 (productid, user, quantity)
+    $sql = "INSERT INTO cart_03 (product_id, user_id, quantity)
         VALUES (:productid, :user, 1)
         ON DUPLICATE KEY UPDATE quantity = quantity + 1";
     $query = $db->prepare($sql);

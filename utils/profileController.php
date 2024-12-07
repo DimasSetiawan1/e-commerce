@@ -3,7 +3,8 @@
 function updateEmail(int $userId, string $email): bool
 {
     global $db;
-
+    if (!is_numeric($userId) && $userId < 0)
+        return false;
     try {
         $email = secure($email);
         $query = "UPDATE users_03 SET email = :email WHERE id = :id";
@@ -20,8 +21,9 @@ function updateEmail(int $userId, string $email): bool
 }
 function updatePhoneNumber(int $userId, int $phoneNumber): bool
 {
+    if (!is_numeric($userId) && $userId < 0)
+        return false;
     global $db;
-
     try {
         $phoneNumber = secure($phoneNumber);
         $query = "UPDATE users_03 SET phone_number = :phone_number WHERE id = :id";
@@ -40,6 +42,8 @@ function updatePhoneNumber(int $userId, int $phoneNumber): bool
 
 function updatePassword(int $userId, string $password, string $newPassword): string
 {
+    if (!is_numeric($userId) && $userId < 0)
+        return 'What are you trying to do?';
     global $db;
     try {
         $password = secure($password);
@@ -69,6 +73,8 @@ function updatePassword(int $userId, string $password, string $newPassword): str
 
 function getAddresses(int $id, int $userId): array
 {
+    if ((!is_numeric($id) && $id < 0) && (!is_numeric($userId) && $userId < 0))
+        return ['error' => 'What are you trying to do?'];
     global $db;
     $id = secure($id);
     $query = "SELECT * FROM addresses_03 WHERE id = :id AND user_id = :userId";
@@ -83,6 +89,8 @@ function getAddresses(int $id, int $userId): array
 
 function deleteAddress(int $addressId): bool
 {
+    if (!is_numeric($addressId) && $addressId < 0)
+        return false;
     global $db;
     $query = "DELETE FROM addresses_03 WHERE id = :id";
     $stmt = $db->prepare($query);
@@ -92,6 +100,8 @@ function deleteAddress(int $addressId): bool
 
 function getAddressById(int $addressId): ?array
 {
+    if (!is_numeric($addressId) && $addressId < 0)
+        return ['error' => 'what are you trying to do?'];
     global $db;
     $query = "SELECT * FROM addresses_03 WHERE id = :id";
     $stmt = $db->prepare($query);
@@ -103,6 +113,8 @@ function getAddressById(int $addressId): ?array
 
 function setDefaultAddress(int $userId, int $addressId): bool
 {
+    if ((!is_numeric($addressId) && $addressId < 0) && (!is_numeric($userId) && $userId < 0))
+        return false;
     global $db;
     $db->beginTransaction();
     try {
@@ -129,6 +141,8 @@ function setDefaultAddress(int $userId, int $addressId): bool
 
 function getDefaultAddress(int $userId): ?array
 {
+    if (!is_numeric($userId) && $userId < 0)
+        return ['error' => 'what are you trying to do?'];
     global $db;
     $query = "SELECT * FROM addresses_03 WHERE user_id = :user_id AND is_default = TRUE LIMIT 1";
     $stmt = $db->prepare($query);
@@ -141,6 +155,8 @@ function getDefaultAddress(int $userId): ?array
 
 function addAddress(int $userId, array $addressData): bool
 {
+    if (!is_numeric($userId) && $userId < 0)
+        return false;
     global $db;
     $query = "INSERT INTO addresses_03 (user_id, name, phone_number, label, full_address, city, province, postal_code) 
               VALUES (:user_id, :name, :phone_number, :label, :full_address, :city, :province, :postal_code)";
@@ -160,6 +176,8 @@ function addAddress(int $userId, array $addressData): bool
 
 function updateAddress(int $addressId, array $addressData): bool
 {
+    if (!is_numeric($addressId) && $addressId < 0)
+        return false;
     global $db;
     $query = "UPDATE addresses_03 
               SET label = :label, full_address = :full_address, city = :city, 
@@ -177,6 +195,8 @@ function updateAddress(int $addressId, array $addressData): bool
 
 function updateName(int $userId, string $newName): bool
 {
+    if (!is_numeric($userId) && $userId < 0)
+        return false;
     global $db;
 
     try {

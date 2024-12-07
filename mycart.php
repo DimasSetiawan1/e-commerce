@@ -2,6 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 include('config.php');
+include('./utils/cartController.php');
 
 
 if (isset($_SESSION['user_id'])) {
@@ -9,14 +10,7 @@ if (isset($_SESSION['user_id'])) {
 
 
     // FECTH PRODUCTS
-    $sql = "SELECT products_03.id,cart_03.quantity,products_03.title,products_03.price,products_03.img FROM cart_03 INNER JOIN products_03 ON products_03.id = cart_03.productid WHERE cart_03.user=:user";
-    $query = $db->prepare($sql);
-    $query->bindParam(':user', $user, PDO::PARAM_STR);
-    $query->execute();
-    $itemCount = $query->rowCount();
-    $results = $query->fetchAll(PDO::FETCH_OBJ);
-
-
+    $results = getCartItems($user);
 }
 
 
@@ -30,6 +24,7 @@ if (isset($_SESSION['user_id'])) {
     <title>TrendZ | Online Store for Latest Trends</title>
     <link rel="stylesheet" href="./css/mdb.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
@@ -85,19 +80,9 @@ if (isset($_SESSION['user_id'])) {
                                                 <hr class="my-4">
                                                 <?php if (isset($results)) {
                                                     foreach ($results as $i => $result) {
-                                                        $qty = $_SESSION['cart'][$result->id]['quantity'] ?? $result->quantity;
-                                                        $total = $result->price * $qty;
+                                                        $total = $result->price * $result->quantity;
 
-                                                        if (isset($_SESSION['cart'][$result->id])) {
-                                                            $_SESSION['cart'][$result->id]['quantity'] = $result->quantity;
-                                                            $_SESSION['cart'][$result->id]['price'] = $result->price;
-                                                        } else {
-                                                            $_SESSION['cart'][$result->id] = [
-                                                                'productid' => $result->id,
-                                                                'quantity' => $result->quantity,
-                                                                'price' => $result->price,
-                                                            ];
-                                                        }
+
                                                         ?>
                                                         <div class="card mb-4 shadow-lg cart-item text-bg-dark"
                                                             style="border-radius: 20px;">
@@ -142,22 +127,21 @@ if (isset($_SESSION['user_id'])) {
                                                                             style="max-width: 300px">
                                                                             <button class="btn h-25 btn-primary px-3 me-2 minus"
                                                                                 data-mdb-button-init data-mdb-ripple-init
-                                                                                data-id="<?= $result->id ?>"
-                                                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                                                data-id="<?= $result->id ?>">
                                                                                 <i class="fas fa-minus"></i>
                                                                             </button>
 
                                                                             <div data-mdb-input-init class="form-outline w-25">
                                                                                 <input min="1" id="quantity-<?= $result->id ?>"
-                                                                                    value="<?= $qty ?>" type="number" disabled
-                                                                                    class="form-control text-center text-bg-dark quantity " />
+                                                                                    value="<?= $result->quantity ?>" type="number"
+                                                                                    disabled
+                                                                                    class="form-control text-center text-bg-dark " />
 
                                                                             </div>
 
                                                                             <button class="btn h-25 btn-primary px-3 ms-2 add"
                                                                                 data-mdb-button-init data-mdb-ripple-init
-                                                                                data-id="<?= $result->id ?>"
-                                                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                                                data-id="<?= $result->id ?>">
                                                                                 <i class="fas fa-plus"></i>
                                                                             </button>
                                                                         </div>
@@ -194,51 +178,21 @@ if (isset($_SESSION['user_id'])) {
 
                                                 <div class="d-flex justify-content-between mb-4">
                                                     <h5 class="text-uppercase">items
-                                                        <?= $itemCount ?? "" ?>
+                                                        <?= $_SESSION['itemCount'] ?? "" ?>
                                                     </h5>
-                                                    <h5 id="subtotal">
 
-                                                    </h5>
                                                 </div>
 
-
-                                                <h5 class="text-uppercase mb-3 mt-3">Give code</h5>
-
-                                                <div class="mb-2 ">
-                                                    <div data-mdb-input-init class="form-outline ">
-                                                        <input type="text" id="addDiscount"
-                                                            class="form-control form-control-lg" />
-                                                        <label class="form-label" for="addDiscount">Enter your
-                                                            code</label>
-
-                                                    </div>
-                                                </div>
-                                                <div id="alert" class="alert d-none">
-                                                    <strong class="text-notification"></strong>
-                                                </div>
-
-                                                <hr class="my-4">
-                                                <?php if (isset($_SESSION['discount'])) {
-                                                    $discount = $_SESSION['discount'];
-                                                    foreach ($discount as $key => $discounts) { ?>
-                                                        <div class="d-flex justify-content-between mb-2"
-                                                            data-discount-id="<?= $key ?>">
-                                                            <span id="discountPercentage" class="text-success"></span>
-                                                            <del><span id="totalDiscount"
-                                                                    data-discount="<?= $discounts['discount_total'] ?? 0 ?>"
-                                                                    class="text-success"> </span>
-                                                            </del>
-                                                        </div>
-                                                        <?php
-                                                    }
-                                                } ?>
                                                 <div class="d-flex justify-content-between mb-5">
                                                     <h5 class="text-uppercase">Total price</h5>
                                                     <h5 id="total"></h5>
                                                 </div>
-                                                <button type="submit" id="checkoutBtn"
-                                                    class="btn btn-dark btn-block btn-lg">Checkout</button>
+                                                <form action="checkout.php" method="post">
+                                                    <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
+                                                    <button type="submit" id="checkoutBtn"
+                                                        class="btn btn-dark btn-block btn-lg">Checkout</button>
 
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -248,19 +202,19 @@ if (isset($_SESSION['user_id'])) {
                     </div>
                 </div>
             </section>
-            <?php include('./inc/footer.php'); ?>
-        <?php } ?>
+            <?php include('./inc/footer.php');
+        } ?>
     </section>
 
-    <script src="./js/jquery-3.3.1.slim.min.js"></script>
     <script src="./js/popper.min.js"></script>
     <script src="./js/cart.js"></script>
+    <script src="./js/jquery-3.3.1.slim.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
     <script src="./js/alertController.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
 </body>
+
+
 
 </html>

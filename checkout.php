@@ -3,6 +3,7 @@ session_start();
 error_reporting(E_ALL);
 include('config.php');
 include('./utils/checkoutController.php');
+include('./utils/cartController.php');
 
 
 
@@ -12,7 +13,30 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!isset($_POST['id']) && ($_POST['id'] != $_SESSION['user_id'])) {
+    header("Location: mycart.php");
+    exit();
+} else {
+    $id = secure((int) $_POST['id']);
+    $query = 'SELECT c.user_id, c.quantity, p.id, p.title, p.stock, p.price, p.img  FROM cart_03 as c INNER JOIN products_03 as p ON p.id = c.product_id  WHERE c.user_id = :user_id ';
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':user_id', $id);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
 
+}
+
+if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
+    $coupon_code = secure((string) $_POST['coupon']);
+    $get_request = applyDiscount($result);
+    if ($get_request) {
+        echo '<script>customAlert({
+        status: "success",
+        title: "Sukses",
+        text: "Kupon berhasil diterapkan",
+        });</script>';
+    }
+}
 
 
 ?>
@@ -25,6 +49,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>TrendZ | Online Store for Latest Trends</title>
     <link rel="stylesheet" href="./css/mdb.min.css  ">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
 </head>
@@ -165,25 +190,24 @@ if (!isset($_SESSION['user_id'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $cart_items = $_SESSION['cart'];
+                                        // $cart_items = getCartItems(user: $user_id);
                                         $subtotal = 0;
-                                        foreach ($cart_items as $item) {
-                                            $data = getDataProducts($item['productid']);
-                                            $subtotalPerProduct = $data->price * $item['quantity'];
-                                            $subtotal = $subtotal + $data->price * $item['quantity'];
+                                        foreach ($result as $key => $item) {
+                                            $subtotalPerProduct = $item->price * $item->quantity;
+                                            $subtotal += $item->price * $item->quantity;
                                             ?>
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
-                                                        <img src='./img/products/<?= $data->img ?>' alt='<?= $data->title ?>'
+                                                        <img src='./img/products/<?= $item->img ?>' alt='<?= $item->title ?>'
                                                             class='img-thumbnail me-3'
                                                             style='width: 80px; height: 80px; object-fit: cover;'>
-                                                        <h6 class='mb-0'><?= $data->title ?></h6>
+                                                        <h6 class='mb-0'><?= $item->title ?></h6>
                                                     </div>
                                                 </td>
-                                                <td class="text-center"><?= $formatter->formatCurrency($data->price, "IDR") ?>
+                                                <td class="text-center"><?= $formatter->formatCurrency($item->price, "IDR") ?>
                                                 </td>
-                                                <td class="text-center"><?= $item['quantity'] ?></td>
+                                                <td class="text-center"><?= $item->quantity ?></td>
                                                 <td class="text-center">
                                                     <?= $formatter->formatCurrency($subtotalPerProduct, "IDR") ?>
                                                 </td>
@@ -192,6 +216,23 @@ if (!isset($_SESSION['user_id'])) {
                                     </tbody>
                                 </table>
 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-4 mt-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Tambah Voucher
+                                </h5>
+                                <form action="checkout.php" method="post">
+                                    <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
+                                    <input type="text" class="form-control w-25" name="coupon" placeholder="Masukan voucher"
+                                        required>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary" name="action"
+                                        value="applyCoupon">Tambah</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -208,6 +249,10 @@ if (!isset($_SESSION['user_id'])) {
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Card Metode Pengiriman -->
+
                     <div class="col-md-4 mb-4 mt-4">
                         <div class="card">
                             <div class="card-body">
@@ -231,7 +276,7 @@ if (!isset($_SESSION['user_id'])) {
 
                     <div class="col-md-4 mb-4 mt-4">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body ">
                                 <h5 class="card-title">Ringkasan Pesanan</h5>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Total Harga Barang</span>
@@ -242,18 +287,19 @@ if (!isset($_SESSION['user_id'])) {
                                     <span id="shippingCost"></span>
                                 </div>
                                 <?php
-                                if (isset($_SESSION['discount'])) {
-                                    $discounts = $_SESSION['discount'];
-                                    foreach ($discounts as $key => $discount) {
-                                        $subtotal = $subtotal - $discount['discount_total'] * $subtotal / 100;
-                                        echo "<div class='d-flex justify-content-between mb-2'>";
-                                        echo "<span >Diskon " . $discount['discount_total'] . "%</span>";
-                                        echo "<del><span id='discount" . $key . "' data-discount=" . $discount['discount_total'] . ">" . $formatter->formatCurrency($subtotal, "IDR") . "</span>";
-                                        echo "</div></del>";
-                                    }
-                                } else {
-                                    echo "<div class='d-flex justify-content-between'>";
-                                    echo "<strong>Total Pembayaran";
+                                // if (isset($_SESSION['discount'])) {
+                            
+                                // } else {
+                                //     echo "<div class='d-flex justify-content-between'>";
+                                //     echo "<strong>Total Pembayaran";
+                                // }
+                                // $discounts = $_SESSION['discount'];
+                                foreach ($discounts as $key => $discount) {
+                                    $subtotal -= $discount['discount_total'] * $subtotal / 100;
+                                    echo "<div class='d-flex justify-content-between mb-2'>";
+                                    echo "<span >Diskon " . $discount['discount_total'] . "%</span>";
+                                    echo "<del><span id='discount" . $key . "' data-discount=" . $discount['discount_total'] . ">" . $formatter->formatCurrency($subtotal, "IDR") . "</span>";
+                                    echo "</div></del>";
                                 }
                                 ?>
                                 <hr>
@@ -280,7 +326,6 @@ if (!isset($_SESSION['user_id'])) {
     <script src="./js/mdb.min.js"></script>
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/alertController.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./js/checkoutController.js"></script>
     <script>
 

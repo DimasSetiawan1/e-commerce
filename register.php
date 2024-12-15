@@ -1,7 +1,7 @@
 <?php
-session_start();
 error_reporting(0);
-include('config.php');
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
 if (isset($_POST['submit'])) {
     $name = secure($_POST['name']);
@@ -21,7 +21,11 @@ if (isset($_POST['submit'])) {
     $count = $query->fetchColumn();
 
     if ($count > 0) {
-        echo "<script>alert('Email Already Exists')</script>";
+        $_SESSION['flash_message'] = [
+            'type' => 'warning',
+            'title' => 'Notifikasi',
+            'message' => 'Email sudah terdaftar!'
+        ];
     } else {
         try {
             $sql = "INSERT INTO users_03(name, email, phone_number, password) VALUES (:name,:email, :phone_number, :password)";
@@ -33,20 +37,25 @@ if (isset($_POST['submit'])) {
             $query->execute();
             $lastInsertId = $db->lastInsertId();
             if ($lastInsertId) {
-                echo "<script>
-                alert('Thanks For Register, Login For Continue Your Shopping')
-                window.location.href = 'login.php';
-                </script>";
-                exit();
-
+                $_SESSION['flash_message'] = [
+                    'type' => 'success',
+                    'title' => 'Register Berhasil',
+                    'message' => 'Terima kasih sudah mendaftar, silahkan login untuk melanjutkan belanjaan anda!'
+                ];
+                header('Location: login.php');
+                die();
             } else {
-                echo "<script>alert('Please Fill All Valid Details')</script>";
-                exit();
+                $_SESSION['flash_message'] = [
+                    'type' => 'error',
+                    'title' => 'Register Failed',
+                    'message' => 'Tolong isi formulir yang lengkap!'
+                ];
+                die();
             }
-        } catch (Throwable $th) {
-            echo "Error: " . $th->getMessage();
-            exit();
+        } catch (PDOException $e) {
+            die("Error: " . $e->getMessage());
         }
+
     }
 
 
@@ -63,6 +72,8 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="./css/mdb.min.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -138,6 +149,19 @@ if (isset($_POST['submit'])) {
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
     <script src="./js/script.js"></script>
+    <?php
+    if (isset($_SESSION['flash_message'])) {
+        $flashMessage = $_SESSION['flash_message'];
+        if (isset($_GET['status']) && $_GET['status'] == 'error') {
+            $type = $flashMessage['type'];
+            $title = $flashMessage['title'];
+            $message = $flashMessage['message'];
+
+            echo "<script>Swal.fire({icon: '$type', title: '$title',text: '$message'});</script>";
+        }
+        unset($_SESSION['flash_message']);
+    }
+    ?>
 
 </body>
 

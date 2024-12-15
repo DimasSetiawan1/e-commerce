@@ -1,42 +1,22 @@
 <?php
-session_start();
+
 error_reporting(E_ALL);
-include('config.php');
-include('./utils/checkoutController.php');
-include('./utils/cartController.php');
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
+include_once './utils/checkoutController.php';
 
-
-
-if (!isset($_SESSION['user_id'])) {
-    header("location: login.php");
-    exit();
-}
 
 if (!isset($_POST['id']) && ($_POST['id'] != $_SESSION['user_id'])) {
     header("Location: mycart.php");
-    exit();
+    die();
 } else {
-    $id = secure((int) $_POST['id']);
-    $query = 'SELECT c.user_id, c.quantity, p.id, p.title, p.stock, p.price, p.img  FROM cart_03 as c INNER JOIN products_03 as p ON p.id = c.product_id  WHERE c.user_id = :user_id ';
-    $stmt = $db->prepare($query);
-    $stmt->bindParam(':user_id', $id);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-
+    $id = secure(is_numeric($_POST['id']) ? $_POST['id'] : 0);
+    $result = getDataItems($id);
 }
 
-if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
-    $coupon_code = secure((string) $_POST['coupon']);
-    $get_request = applyDiscount($result);
-    if ($get_request) {
-        echo '<script>customAlert({
-        status: "success",
-        title: "Sukses",
-        text: "Kupon berhasil diterapkan",
-        });</script>';
-    }
-}
+
+
 
 
 ?>
@@ -59,7 +39,25 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
         <?php include('./inc/header.php');
         if (strlen(isset($_SESSION['user_id']) == 0)) {
             header("Location: login.php");
-        } else { ?>
+        } else {
+            if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
+                $coupon_code = secure((string) $_POST['coupon']);
+                $getRequest = applyDiscount($coupon_code);
+                $voucherDecode = json_decode($getRequest);
+                if ($voucherDecode->status === "success") {
+                    echo "<script>Swal.fire({
+            icon: 'success',
+            title: 'Sukses',
+            text: '{$voucherDecode->message}',
+            });</script>";
+                } else {
+                    echo "<script>Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: '{$voucherDecode->message}',
+            });</script>";
+                }
+            } ?>
 
             <div class="container">
                 <div class="row mx-auto p-5">
@@ -103,7 +101,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
 
                                             if (!empty($default_address)) {
                                                 $default_address = reset($default_address);
-                                                echo "<h5 class='card-title' id='address-title'>{$default_address['name']} | 0{$default_address['phone_number']}</h5>";
+                                                echo "<h5 class='card-title' data-id='{$default_address['id']}' id='address-title'>{$default_address['name']} | {$default_address['phone_number']}</h5>";
                                                 echo "<p class='card-text' id='full-address'>{$default_address['address']}</p>";
                                                 ?>
                                             </div>
@@ -190,7 +188,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // $cart_items = getCartItems(user: $user_id);
                                         $subtotal = 0;
                                         foreach ($result as $key => $item) {
                                             $subtotalPerProduct = $item->price * $item->quantity;
@@ -207,7 +204,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                                                 </td>
                                                 <td class="text-center"><?= $formatter->formatCurrency($item->price, "IDR") ?>
                                                 </td>
-                                                <td class="text-center"><?= $item->quantity ?></td>
+                                                <td class="text-center" id="qty-<?= $item->quantity ?>"><?= $item->quantity ?>
+                                                </td>
                                                 <td class="text-center">
                                                     <?= $formatter->formatCurrency($subtotalPerProduct, "IDR") ?>
                                                 </td>
@@ -219,25 +217,52 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 mb-4 mt-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    Tambah Voucher
-                                </h5>
-                                <form action="checkout.php" method="post">
-                                    <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
-                                    <input type="text" class="form-control w-25" name="coupon" placeholder="Masukan voucher"
-                                        required>
-                                    <br>
-                                    <button type="submit" class="btn btn-primary" name="action"
-                                        value="applyCoupon">Tambah</button>
-                                </form>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 mt-4">
+                            <div class="card ">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        Tambah Voucher
+                                    </h5>
+                                    <form action="checkout.php" method="post">
+                                        <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
+                                        <input type="text" class="form-control w-50" name="coupon"
+                                            placeholder="Masukan voucher" required>
+                                        <br>
+                                        <button type="submit" class="btn btn-primary" name="action"
+                                            value="applyCoupon">Tambah</button>
+                                    </form>
+
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-6 col-sm-6 mt-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Daftar Voucher</h5>
+                                    <ul class="list-group">
+                                        <?php
+                                        $vouchers = getAvailableVouchers();
+                                        if (!empty($vouchers)) {
+                                            foreach ($vouchers as $voucher) {
+                                                $isSelected = $voucher->is_select === 1 ? 'disabled' : '';
+                                                echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
+                                                echo "<span>{$voucher->coupon_code} - Diskon {$voucher->value}%</span>";
+                                                echo "<button class='btn btn-sm btn-primary {$isSelected}' data-id='{$voucher->id}' id='discount-{$voucher->value}' onclick='applyVoucher(\"{$voucher->value}\",\"{$voucher->id}\")'>Gunakan</button>";
+                                                echo "</li>";
+                                            }
+                                        } else {
+                                            echo "<li class='list-group-item'>Input Voucher Terlebih Dahulu</li>";
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <!-- Card Metode Pembayaran -->
-                    <div class="col-md-4 mb-4 mt-4">
+                    <div class="col-md-4 col-sm-4  mt-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Metode Pembayaran</h5>
@@ -250,10 +275,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                         </div>
                     </div>
 
-
                     <!-- Card Metode Pengiriman -->
 
-                    <div class="col-md-4 mb-4 mt-4">
+                    <div class="col-md-4 col-sm-4 mt-4">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Metode Pengiriman</h5>
@@ -262,7 +286,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                                     $couriers = getCouriers();
                                     if (!empty($couriers)) {
                                         foreach ($couriers as $courier) {
-                                            echo "<option value='{$courier->code}' data-price='{$courier->price}'>{$courier->name} - " . $formatter->formatCurrency($courier->price, 'IDR') . "</option>";
+                                            echo "<option value='{$courier->id}' data-price='{$courier->price}'>{$courier->name} - " . $formatter->formatCurrency($courier->price, 'IDR') . "</option>";
                                         }
                                     } else {
                                         echo "<option value=''>No couriers available</option>";
@@ -274,7 +298,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                         </div>
                     </div>
 
-                    <div class="col-md-4 mb-4 mt-4">
+                    <div class="col-md-4 col-sm-4 mt-4">
                         <div class="card">
                             <div class="card-body ">
                                 <h5 class="card-title">Ringkasan Pesanan</h5>
@@ -286,29 +310,17 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
                                     <span>Biaya Pengiriman</span>
                                     <span id="shippingCost"></span>
                                 </div>
-                                <?php
-                                // if (isset($_SESSION['discount'])) {
-                            
-                                // } else {
-                                //     echo "<div class='d-flex justify-content-between'>";
-                                //     echo "<strong>Total Pembayaran";
-                                // }
-                                // $discounts = $_SESSION['discount'];
-                                foreach ($discounts as $key => $discount) {
-                                    $subtotal -= $discount['discount_total'] * $subtotal / 100;
-                                    echo "<div class='d-flex justify-content-between mb-2'>";
-                                    echo "<span >Diskon " . $discount['discount_total'] . "%</span>";
-                                    echo "<del><span id='discount" . $key . "' data-discount=" . $discount['discount_total'] . ">" . $formatter->formatCurrency($subtotal, "IDR") . "</span>";
-                                    echo "</div></del>";
-                                }
-                                ?>
+                                <div id="" class="d-flex justify-content-between mb-2">
+                                    <span id="discount-label">Diskon</span>
+                                    <span id="discount"></span>
+                                </div>
                                 <hr>
                                 <div class="d-flex justify-content-between mb-3">
                                     <strong>Total Pembayaran</strong>
                                     <strong id="totalPayment"></strong>
                                 </div>
 
-                                <button id="checkoutBtn" class="btn btn-primary btn-block">
+                                <button id="checkoutBtn" class="btn btn-primary btn-block" onclick="processCheckout()">
                                     <i class="fas fa-shopping-cart me-2"></i>Checkout Sekarang
                                 </button>
                             </div>
@@ -327,6 +339,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'applyCoupon') {
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/alertController.js"></script>
     <script src="./js/checkoutController.js"></script>
+
     <script>
 
         document.querySelector('.btn-link').addEventListener('click', function () {

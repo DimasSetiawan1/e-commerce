@@ -5,7 +5,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include_once '../config.php';
+include_once '../inc/config.inc.php';
+ include_once '../inc/config_session.inc.php';
 include_once '../utils/cartController.php';
 
 if (isset($_SESSION['user_id'])) {
@@ -18,7 +19,9 @@ if (isset($_SESSION['user_id'])) {
     switch ($_POST['action'] ?? '') {
         case 'incrementCart':
             try {
-                $product_id = secure($_POST['id']);
+                if (!isset($_POST['id']))
+                    return http_response_code(500);
+                $product_id = secure(is_numeric($_POST['id'])) ? $_POST['id'] : 0;
                 $query = "UPDATE cart_03 SET quantity = quantity + 1 WHERE product_id = :id AND user_id = :user_id";
                 $stmt = $db->prepare($query);
                 $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
@@ -50,7 +53,9 @@ if (isset($_SESSION['user_id'])) {
                 break;
             }
         case 'decrementCart':
-            $product_id = secure($_POST['id']);
+            if (!isset($_POST['id']))
+                return http_response_code(500);
+            $product_id = secure(is_numeric($_POST['id'])) ? $_POST['id'] : 0;
             $query = "UPDATE cart_03 SET quantity = quantity - 1 WHERE product_id = :id AND user_id = :user_id";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
@@ -73,6 +78,10 @@ if (isset($_SESSION['user_id'])) {
             break;
         case 'getDiscount':
             try {
+                if (!isset($_POST['voucher']))
+                    return http_response_code(500);
+
+                // Sanitize input to prevent SQL injections and XSS attacks.
                 $get_discount = secure($_POST['voucher']);
                 $query = "SELECT * FROM voucher_03 WHERE coupon_code = :discount";
                 $sql = $db->prepare($query);
@@ -98,7 +107,9 @@ if (isset($_SESSION['user_id'])) {
             }
         case 'removeCart':
             try {
-                $product_id = secure($_POST['id']);
+                if (!isset($_POST['id']))
+                    return http_response_code(500);
+                $product_id = secure(is_numeric($_POST['id'])) ? $_POST['id'] : 0;
                 $query = "DELETE FROM cart_03 WHERE product_id = (:cartid) AND user_id = (:userid) LIMIT 1";
                 $sql = $db->prepare($query);
                 $sql->bindParam(':cartid', $product_id, PDO::PARAM_INT);

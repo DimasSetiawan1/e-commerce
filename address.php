@@ -1,12 +1,8 @@
 <?php
-session_start();
-include_once 'config.php';
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 
 $current_page = basename($_SERVER['PHP_SELF']);
 

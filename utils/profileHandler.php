@@ -1,11 +1,7 @@
 <?php
-session_start();
-include_once '../config.php';
+include_once '../config.inc.php';
 include_once 'profileController.php';
-
-if (!isset($_SESSION['user_id'])) {
-    die(json_encode(['success' => false, 'message' => 'Unauthorized']));
-}
+include_once '../inc/config_session.inc.php';
 
 $userId = $_SESSION['user_id'];
 

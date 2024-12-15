@@ -1,5 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Retrieves the items in a user's cart.
+ *
+ * @param int $user_id The ID of the user whose cart items are to be retrieved.
+ * 
+ * @return array An array of cart item objects, each containing user ID, quantity, product ID, title, stock, price, and image.
+ *               If an error occurs, an array with an 'error' key and the error message is returned.
+ */
+function getDataItems(int $user_id)
+{
+    try {
+        global $db;
+        if (!$db) {
+            throw new PDOException('Could not connect to the database.');
+        }
+        if ($user_id <= 0) {
+            throw new InvalidArgumentException('Invalid user ID.');
+        }
+        $user_id = secure(is_numeric($user_id) ? $user_id : 0);
+        $query = 'SELECT c.user_id, c.quantity, p.id, p.title, p.stock, p.price, p.img  FROM cart_03 as c INNER JOIN products_03 as p ON p.id = c.product_id  WHERE c.user_id = :user_id ';
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } catch (\Throwable $th) {
+        return ['error' => $th->getMessage()];
+    }
+}
+
+
 /**
  * Retrieves a list of addresses associated with a given customer ID.
  *
@@ -53,17 +85,58 @@ function getCouriers(): array
  * 
  * @return bool Returns true if the discount was successfully applied, false otherwise.
  */
-function applyDiscount($coupon_code)
+function applyDiscount(string $coupon_code): ?string
 {
     try {
-        global $db;                                                                                                                                                                
-        $query = 'INSERT INTO cart_voucher_03 (voucher_id,cart_id) VALUES (:voucher_id,:cart_id) WHERE user_id = :user_id AND cart_id = :cart_id AND voucher_id NOT IN (SELECT voucher_id FROM cart_voucher_03 WHERE cart_id = :cart_id)';
+        global $db;
+        $userId = $_SESSION['user_id'];
+        $coupon_code = secure($coupon_code);
+        // validasi voucher
+        $query = 'SELECT * FROM voucher_03 WHERE coupon_code = :coupon_code AND end_date >= NOW() ';
         $stmt = $db->prepare($query);
-        $stmt->bindParam(':coupon_code', $coupon_code, PDO::PARAM_INT);
+        $stmt->bindParam(':coupon_code', $coupon_code, PDO::PARAM_STR);
         $stmt->execute();
-        return $stmt->rowCount() > 0;
+        $voucher = $stmt->fetch(PDO::FETCH_OBJ);
+
+        bentrok disinih 
+        if ($stmt->rowCount() > 0) {
+            $voucherId = $voucher->id;
+            $query = 'INSERT INTO voucher_usage_03 (user_id, voucher_id) SELECT :user_id, :voucher_id  WHERE NOT EXISTS ( SELECT 1 FROM cart_voucher_03 WHERE user_id = :user_id AND voucher_id = :voucher_id)';
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':voucher_id', $voucherId, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return json_encode(['status' => 'success', 'message' => 'Coupon berhasil diterapkan']);
+            } else {
+                return json_encode(['status' => 'error', 'message' => 'Coupon Sudah diterapkan']);
+            }
+        } else {
+            return json_encode(['status' => 'error', 'message' => "Coupon sudah expired atau salah"]);
+        }
+
     } catch (\Throwable $th) {
-        echo $th->getMessage();
-        return false;
+        return json_encode(['status' => 'error', 'message' => "{$th->getMessage()}"]);
     }
 }
+
+
+function getAvailableVouchers()
+{
+    try {
+        global $db;
+        $userId = $_SESSION['user_id'];
+        $query = 'SELECT v.*, cv.is_select FROM voucher_03 v INNER JOIN voucher_usage_03 cv ON v.id = cv.voucher_id WHERE cv.user_id = :user_id ';
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    } catch (\Throwable $th) {
+        echo json_encode(['status' => 'error', 'message' => "{$th->getMessage()}"]);
+    }
+}
+function setTransaction(array $data)
+{
+
+}
+

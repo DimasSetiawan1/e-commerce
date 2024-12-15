@@ -1,10 +1,10 @@
 ﻿<?php
-
 // DB credentials.
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', 'Sxbphhtixplpc1!');
 define('DB_NAME', 'db_kl03');
+
 
 
 $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
@@ -26,9 +26,9 @@ function secure($data)
 
 // Connect to database
 try {
-    $db = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-
+    $db = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, );
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    exit("Error: " . $e->getMessage());
+    die("Error: " . $e->getMessage());
 }
 

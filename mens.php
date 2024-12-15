@@ -1,7 +1,8 @@
 <?php
-session_start();
 error_reporting(E_ALL);
-include('config.php');
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
+
 
 
 if (isset($_GET['add'])) {
@@ -9,7 +10,7 @@ if (isset($_GET['add'])) {
     $productid = secure($_GET['add']);
     $user = $_SESSION['user_id'];
     try {
-      $sql = "INSERT INTO cart_03 (productid, user, quantity)
+      $sql = "INSERT INTO cart_03 (product_id, user_id, quantity)
         VALUES (:productid, :user, 1)
         ON DUPLICATE KEY UPDATE quantity = quantity + 1";
       $query = $db->prepare($sql);
@@ -18,11 +19,11 @@ if (isset($_GET['add'])) {
       $query->execute();
       header("Location: mens.php?status=success");
 
-    } catch (\Throwable $th) {
+    } catch (PDOException $e) {
       header("Location: mens.php?status=error");
-
-      throw $th;
+      die("Error: " . $e->getMessage());
     }
+
   } else {
     header("Location: mens.php?status=error");
 

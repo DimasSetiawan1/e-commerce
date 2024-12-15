@@ -108,7 +108,7 @@ function getAddressById(int $addressId): ?array
     $stmt->bindParam(':id', $addressId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result ? $result : null;
+    return $result ?? null;
 }
 
 function setDefaultAddress(int $userId, int $addressId): bool

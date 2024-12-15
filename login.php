@@ -1,11 +1,9 @@
 <?php
-session_start();
 error_reporting(0);
-include('config.php');
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
-if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-}
+
 
 if (isset($_POST['submit'])) {
     $email = secure($_POST['email']);
@@ -25,17 +23,17 @@ if (isset($_POST['submit'])) {
                 'title' => 'Login Berhasil',
                 'message' => 'Selamat datang kembali!'
             ];
-            session_write_close();
+            $_SESSION['last_regeneration_time'] = time();
             header('Location: index.php');
-            exit();
+            die();
         } else {
             $_SESSION['flash_message'] = [
                 'type' => 'error',
                 'title' => 'Login Gagal',
                 'message' => 'Password salah!'
             ];
-            header('Location: login.php');
-            exit();
+            header('Location: login.php?status=error');
+            die();
         }
 
     } else {
@@ -44,11 +42,12 @@ if (isset($_POST['submit'])) {
             'title' => 'Login Gagal',
             'message' => 'Email salah!'
         ];
-        header('Location: login.php');
+        header('Location: login.php?status=error');
 
-        exit();
+        die();
     }
 }
+
 
 ?>
 
@@ -62,6 +61,8 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="./css/mdb.min.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -127,19 +128,18 @@ if (isset($_POST['submit'])) {
     <script src="./js/mdb.umd.min.js"></script>
     <script src="./js/mdb.min.js"></script>
     <script src="./js/alertController.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <?php
     if (isset($_SESSION['flash_message'])) {
         $flashMessage = $_SESSION['flash_message'];
+        if (isset($_GET['status']) && $_GET['status'] == 'error') {
+            $type = $flashMessage['type'];
+            $title = $flashMessage['title'];
+            $message = $flashMessage['message'];
+
+            echo "<script>Swal.fire({icon: '$type', title: '$title',text: '$message'});</script>";
+        }
         unset($_SESSION['flash_message']);
-        ?>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                customAlert('<?= $flashMessage['type']; ?>', '<?= $flashMessage['title']; ?>', '<?php echo $flashMessage['message']; ?>');
-            });
-        </script>
-        <?php
     }
     ?>
 

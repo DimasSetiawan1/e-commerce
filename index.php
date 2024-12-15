@@ -1,8 +1,7 @@
 <?php
-session_start();
 error_reporting(E_ALL);
-include('config.php');
-
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
 if (isset($_SESSION['user_id'])) {
   try {
@@ -14,10 +13,10 @@ if (isset($_SESSION['user_id'])) {
     $itemCount = $query->fetchColumn();
     $_SESSION['itemCount'] = $itemCount;
 
-  } catch (\Throwable $th) {
-    echo $th->getMessage();
-    exit();
+  } catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
   }
+
 }
 
 if (isset($_GET['status'])) {
@@ -61,9 +60,9 @@ if (isset($_GET['add']) && isset($_SESSION['user_id'])) {
     header("Location: index.php?status=success");
 
 
-  } catch (\Throwable $th) {
+  } catch (PDOException $e) {
     header("Location: index.php?status=error");
-    throw $th;
+    die("Error: " . $e->getMessage());
   }
 
 }
@@ -90,12 +89,14 @@ if (isset($_GET['category'])) {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
 <body>
-  <?php include('./inc/header.php'); ?>
-  <?php include('./inc/carousel.php'); ?>
+  <?php include_once './inc/header.php';
+  include_once './inc/carousel.php'; ?>
 
   <section class="container-fluid px-4 pt-5 h-100 h-custom">
 
@@ -392,13 +393,11 @@ if (isset($_GET['category'])) {
 
 
 
-  <script src="./js/jquery-3.3.1.js"></script>
   <script src="./js/popper.min.js"></script>
+  <script src="./js/jquery-3.3.1.js"></script>
   <script src="./js/mdb.min.js"></script>
   <script src="./js/mdb.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="./js/alertController.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="text/javascript">
     const setCategory = function () {
@@ -410,16 +409,15 @@ if (isset($_GET['category'])) {
   <?php
   if (isset($_SESSION['flash_message'])) {
     $flashMessage = $_SESSION['flash_message'];
+    $type = $flashMessage['type'];
+    $title = $flashMessage['title'];
+    $message = $flashMessage['message'];
+    echo "<script>Swal.fire({icon: '$type', title: '$title',text: '$message'});</script>";
+
     unset($_SESSION['flash_message']);
-    ?>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        customAlert('<?= $flashMessage['type']; ?>', '<?= $flashMessage['title']; ?>', '<?php echo $flashMessage['message']; ?>');
-      });
-    </script>
-    <?php
   }
   ?>
+
 </body>
 
 </html>

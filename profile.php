@@ -1,6 +1,7 @@
 <?php
-session_start();
-include_once('config.php');
+
+include_once './inc/config.inc.php';
+include_once './inc/config_session.inc.php';
 
 
 if (!isset($_SESSION['user_id'])) {
@@ -12,8 +13,8 @@ try {
     $stmt = $db->prepare("SELECT * FROM users_03 WHERE id = :id");
     $stmt->execute(['id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_OBJ);
-} catch (\Throwable $th) {
-    echo $th->getMessage();
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
 }
 
 

@@ -1,13 +1,12 @@
 <?php
-session_start();
 error_reporting(E_ALL);
-include('config.php');
-include('./utils/cartController.php');
+include_once './inc/config.inc.php';
+include_once './utils/cartController.php';
+include_once './inc/config_session.inc.php';
 
 
 if (isset($_SESSION['user_id'])) {
     $user = $_SESSION['user_id'];
-
 
     // FECTH PRODUCTS
     $results = getCartItems($user);

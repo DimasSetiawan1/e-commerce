@@ -1,13 +1,14 @@
 <?php
 
-session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 include_once '../inc/config.inc.php';
- include_once '../inc/config_session.inc.php';
+include_once '../inc/config_session.inc.php';
 include_once '../utils/cartController.php';
+
+if ($_SERVER['REQUEST_METHOD'] === "GET") {
+    echo json_encode(['message' => 'Nothing Here']);
+    exit();
+}
 
 if (isset($_SESSION['user_id'])) {
 
@@ -20,7 +21,7 @@ if (isset($_SESSION['user_id'])) {
         case 'incrementCart':
             try {
                 if (!isset($_POST['id']))
-                    return http_response_code(500);
+                    return http_response_code(403);
                 $product_id = secure(is_numeric($_POST['id'])) ? $_POST['id'] : 0;
                 $query = "UPDATE cart_03 SET quantity = quantity + 1 WHERE product_id = :id AND user_id = :user_id";
                 $stmt = $db->prepare($query);

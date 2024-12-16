@@ -98,7 +98,7 @@ function applyDiscount(string $coupon_code): ?string
         $stmt->execute();
         $voucher = $stmt->fetch(PDO::FETCH_OBJ);
 
-        bentrok disinih 
+        // bentrok disinih 
         if ($stmt->rowCount() > 0) {
             $voucherId = $voucher->id;
             $query = 'INSERT INTO voucher_usage_03 (user_id, voucher_id) SELECT :user_id, :voucher_id  WHERE NOT EXISTS ( SELECT 1 FROM cart_voucher_03 WHERE user_id = :user_id AND voucher_id = :voucher_id)';
